@@ -1,0 +1,19 @@
+name: Test and scan repository
+
+on:
+  workflow_dispatch: 
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  test-and-scan:
+    strategy:
+      matrix:
+        dotnet-version: ['10.0.x' ]
+    uses: hollowbytes/hb-shared-workflows/.github/workflows/ci-dotnet-test.yml@main
+    with:
+      dotnet-version: ${{ matrix.dotnet-version }}
+    secrets: inherit

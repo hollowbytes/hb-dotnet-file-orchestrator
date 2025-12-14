@@ -1,0 +1,6 @@
+@HbDotnetFileOrchestrator_HostAddress = http://localhost:5157
+
+GET {{HbDotnetFileOrchestrator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
