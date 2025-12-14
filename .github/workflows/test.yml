@@ -15,5 +15,7 @@ jobs:
         dotnet-version: ['10.0.x' ]
     uses: hollowbytes/hb-shared-workflows/.github/workflows/ci-dotnet-test.yml@main
     with:
+      sonar-project-key: 'hollowbytes_hb-dotnet-file-orchestrator'
+      sonar-organization-key: 'hollowbytes'
       dotnet-version: ${{ matrix.dotnet-version }}
     secrets: inherit
