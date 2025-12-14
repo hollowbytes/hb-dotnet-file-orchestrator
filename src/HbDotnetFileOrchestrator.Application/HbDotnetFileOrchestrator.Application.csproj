@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\HbDotnetFileOrchestrator.Domain\HbDotnetFileOrchestrator.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
