@@ -10,4 +10,4 @@ jobs:
   build-and-publish:
     uses: hollowbytes/hb-shared-workflows/.github/workflows/ci-docker-build.yml@main
     with:
-      file: ./src/HbDotnetBff/Dockerfile
+      file: ./src/HbDotnetFileOrchestrator/Dockerfile
