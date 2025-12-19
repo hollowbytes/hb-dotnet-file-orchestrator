@@ -9,17 +9,18 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
-        <PackageReference Include="Scalar.AspNetCore" Version="2.11.6" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.11.6"/>
+        <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\HbDotnetFileOrchestrator.Infrastructure\HbDotnetFileOrchestrator.Infrastructure.csproj" />
+        <ProjectReference Include="..\HbDotnetFileOrchestrator.Infrastructure\HbDotnetFileOrchestrator.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
 </Project>

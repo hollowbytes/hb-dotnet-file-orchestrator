@@ -5,6 +5,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AFAC8277-E65F-4706-B396-48C7E7F8EA5F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{444C3E45-D474-42D6-926B-4219BEF2F95F}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Packages.props = tests\Directory.Packages.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbDotnetFileOrchestrator.Application", "src\HbDotnetFileOrchestrator.Application\HbDotnetFileOrchestrator.Application.csproj", "{17442EA0-5AE5-4D77-A176-DEE7EC27EB37}"
 EndProject
@@ -17,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbDotnetFileOrchestrator.Domain.Tests", "tests\HbDotnetFileOrchestrator.Domain.Tests\HbDotnetFileOrchestrator.Domain.Tests.csproj", "{0B0C542C-4C1F-4E02-9BD3-0424783144D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbDotnetFileOrchestrator.Infrastructure.Tests", "tests\HbDotnetFileOrchestrator.Infrastructure.Tests\HbDotnetFileOrchestrator.Infrastructure.Tests.csproj", "{F24668D2-4AEF-4AD8-8E0E-0E113F58164A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HbDotnetFileOrchestrator.Tests", "tests\HbDotnetFileOrchestrator.Tests\HbDotnetFileOrchestrator.Tests.csproj", "{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +57,10 @@ Global
 		{F24668D2-4AEF-4AD8-8E0E-0E113F58164A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F24668D2-4AEF-4AD8-8E0E-0E113F58164A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F24668D2-4AEF-4AD8-8E0E-0E113F58164A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5EF26F36-746E-40D3-8798-44F0BDA07D30} = {AFAC8277-E65F-4706-B396-48C7E7F8EA5F}
@@ -61,5 +70,6 @@ Global
 		{40A06A12-CBDA-49A5-9F7D-E1B2ABB68268} = {444C3E45-D474-42D6-926B-4219BEF2F95F}
 		{0B0C542C-4C1F-4E02-9BD3-0424783144D4} = {444C3E45-D474-42D6-926B-4219BEF2F95F}
 		{F24668D2-4AEF-4AD8-8E0E-0E113F58164A} = {444C3E45-D474-42D6-926B-4219BEF2F95F}
+		{66D6A33D-57D9-4DED-99D3-9F1B1DD622A8} = {444C3E45-D474-42D6-926B-4219BEF2F95F}
 	EndGlobalSection
 EndGlobal
