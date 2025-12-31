@@ -4,5 +4,5 @@ namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
 public interface IMetadataProvider
 {
-    public Metadata GetProperties();
+    public Metadata GetMetadata();
 }

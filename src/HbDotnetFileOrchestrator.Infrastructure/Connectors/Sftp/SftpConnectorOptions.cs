@@ -4,5 +4,7 @@ public class SftpConnectorOptions : IConnectorOptions
 {
     public string Id { get; set; } = string.Empty;
 
-    public string Type => "Sftp";
+    public string Rule { get; set; } = string.Empty;
+
+    public string Type => ConnectionTypes.SFTP;
 }

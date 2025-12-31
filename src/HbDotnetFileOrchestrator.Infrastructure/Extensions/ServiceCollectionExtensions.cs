@@ -21,5 +21,6 @@ public static class ServiceCollectionExtensions
             .ValidateOnStart();
 
         services.AddScoped<IMetadataProvider, MetadataProvider>();
+        services.AddScoped<IConnectorProvider, ConnectorProvider>();
     }
 }

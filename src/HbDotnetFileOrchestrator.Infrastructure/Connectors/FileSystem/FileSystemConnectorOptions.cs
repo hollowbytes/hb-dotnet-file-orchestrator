@@ -4,5 +4,7 @@ public class FileSystemConnectorOptions : IConnectorOptions
 {
     public string Id { get; set; }
 
-    public string Type => "FileSystem";
+    public string Rule { get; set; } = string.Empty;
+
+    public string Type => ConnectionTypes.FILESYSTEM;
 }

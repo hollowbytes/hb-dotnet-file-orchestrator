@@ -5,13 +5,13 @@ namespace HbDotnetFileOrchestrator.Application.Files;
 
 public class FilesService(
     ILogger<FilesService> logger,
-    IMetadataProvider metadataProvider
+    IMetadataProvider metadataProvider,
+    IConnectorProvider connectorProvider
 ) : IFilesService
 {
-    public Task SaveFileAsync(CancellationToken cancellationToken = default)
+    public async Task SaveFileAsync(CancellationToken cancellationToken = default)
     {
-        var metadata = metadataProvider.GetProperties();
-
-        return Task.CompletedTask;
+        var metadata = metadataProvider.GetMetadata();
+        var providers = await connectorProvider.GetProvidersAsync(metadata, cancellationToken);
     }
 }

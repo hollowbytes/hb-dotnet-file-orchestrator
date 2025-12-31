@@ -10,7 +10,7 @@ public class MetadataProvider(ILogger<MetadataProvider> logger, IHttpContextAcce
 {
     private HttpContext HttpContext => httpContextAccessor.HttpContext;
 
-    public Metadata GetProperties()
+    public Metadata GetMetadata()
     {
         var headers = HttpContext.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToArray());
         var query = HttpContext.Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
