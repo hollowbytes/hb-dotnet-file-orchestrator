@@ -1,3 +1,4 @@
+using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Connectors.BlobStorage;
 using HbDotnetFileOrchestrator.Infrastructure.Connectors.FileSystem;
 using HbDotnetFileOrchestrator.Infrastructure.Connectors.Sftp;
@@ -14,23 +15,12 @@ public class ConnectorOptions
 
     public FileSystemConnectorOptions[] FileSystem { get; set; } = [];
 
-    public IConnectorOptions[] All
-    {
-        get
-        {
-            var props = typeof(ConnectorOptions).GetProperties();
-            var filteredProps = props
-                .Where(prop => prop.PropertyType.IsArray)
-                .Where(prop => !prop.PropertyType.GetElementType()!.IsInterface)
-                .Where(prop => typeof(IConnectorOptions[]).IsAssignableFrom(prop.PropertyType));
-
-            var values = filteredProps.SelectMany(prop =>
-                    prop.GetValue(this) as IConnectorOptions[] ?? Array.Empty<IConnectorOptions>())
-                .ToArray();
-
-            return values;
-        }
-    }
+    public IConnectorOptions[] All => typeof(ConnectorOptions).GetProperties()
+        .Where(prop => prop.PropertyType.IsArray)
+        .Where(prop => !prop.PropertyType.GetElementType()!.IsInterface)
+        .Where(prop => typeof(IConnectorOptions[]).IsAssignableFrom(prop.PropertyType))
+        .SelectMany(prop => prop.GetValue(this) as IConnectorOptions[] ?? [])
+        .ToArray();
 
     public IConnectorOptions Find(string id)
     {

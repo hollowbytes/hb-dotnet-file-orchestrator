@@ -1,3 +1,5 @@
+using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+
 namespace HbDotnetFileOrchestrator.Infrastructure.Connectors.BlobStorage;
 
 public class BlobStorageConnectorOptions : IConnectorOptions

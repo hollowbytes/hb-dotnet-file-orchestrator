@@ -1,4 +1,4 @@
-namespace HbDotnetFileOrchestrator.Infrastructure.Connectors;
+namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
 public interface IConnectorOptions
 {

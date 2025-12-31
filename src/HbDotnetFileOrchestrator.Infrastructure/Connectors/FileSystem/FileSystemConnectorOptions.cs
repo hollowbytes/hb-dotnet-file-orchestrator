@@ -1,3 +1,5 @@
+using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+
 namespace HbDotnetFileOrchestrator.Infrastructure.Connectors.FileSystem;
 
 public class FileSystemConnectorOptions : IConnectorOptions

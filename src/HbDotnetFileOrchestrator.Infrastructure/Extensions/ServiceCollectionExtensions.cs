@@ -1,6 +1,7 @@
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
 using HbDotnetFileOrchestrator.Infrastructure.Connectors;
+using HbDotnetFileOrchestrator.Infrastructure.Connectors.FileSystem;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,8 @@ public static class ServiceCollectionExtensions
             .ValidateOnStart();
 
         services.AddScoped<IMetadataProvider, MetadataProvider>();
+        services.AddScoped<IRulesEngine, ConnectorRulesEngine>();
         services.AddScoped<IConnectorProvider, ConnectorProvider>();
+        services.AddScoped<IConnectorStrategy<FileSystemConnectorOptions>, FileSystemConnectorStrategy>();
     }
 }
