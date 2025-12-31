@@ -13,26 +13,34 @@ public class ConnectorRulesEngine(
 {
     public async Task<IConnectorOptions[]> RunAsync(Metadata metadata, CancellationToken cancellationToken = default)
     {
-        var all = connectorOptions.Value.All;
-
-        var rules = all.Select(x => new Rule
-        {
-            RuleName = x.Id,
-            Expression = x.Rule,
-            ErrorMessage = $"Failed to evaluate ({x.Type}) {x.Id}: '{x.Rule}'"
-        }).ToArray();
-
-        var workflow = new Workflow
-        {
-            WorkflowName = "default",
-            Rules = rules
-        };
+        var workflow = ToWorkflow(connectorOptions.Value);
 
         var re = new RulesEngine.RulesEngine([workflow]);
-        var ruleParameter = new RuleParameter("metadata", metadata);
-        var result = await re.ExecuteAllRulesAsync(workflow.WorkflowName, ruleParameter);
+        var result = await re.ExecuteAllRulesAsync(workflow.WorkflowName, new RuleParameter("metadata", metadata));
 
-        var names = result.Where(x => x.IsSuccess).Select(x => x.Rule.RuleName).ToArray();
-        return all.Where(x => names.Contains(x.Id)).ToArray();
+        return result.Where(x => x.IsSuccess)
+            .Select(x => x.Rule as ValueRule)
+            .Select(x => x!.Options)
+            .ToArray();
+    }
+
+    private static Workflow ToWorkflow(ConnectorOptions options)
+    {
+        return new Workflow
+        {
+            WorkflowName = "default",
+            Rules = options.All.Select(x => new ValueRule
+            {
+                Options = x,
+                RuleName = x.Id,
+                Expression = x.Rule,
+                ErrorMessage = $"Failed to evaluate ({x.Type}) {x.Id}: '{x.Rule}'"
+            }).ToArray()
+        };
+    }
+
+    private class ValueRule : Rule
+    {
+        public required IConnectorOptions Options { get; init; }
     }
 }
