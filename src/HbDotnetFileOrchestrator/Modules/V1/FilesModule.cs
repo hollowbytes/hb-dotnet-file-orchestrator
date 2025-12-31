@@ -1,13 +1,7 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
+using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Modules.Common;
 using HbDotnetFileOrchestrator.Modules.V1.Requests;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Modules.V1;
 
@@ -25,10 +19,11 @@ public static class FilesModule
             .WithName(nameof(GetFileAsync));
     }
 
-    private static IResult PostFileAsync
+    private static async Task<IResult> PostFileAsync
     (
         [FromServices] LinkGenerator linker,
         [FromServices] ILogger<V1PostFileRequest> logger,
+        [FromServices] IFilesService filesService,
         [AsParameters] V1PostFileRequest request
     )
     {
@@ -41,7 +36,7 @@ public static class FilesModule
 
         logger.LogInformation("Received file");
 
-        // TODO: Store file
+        await filesService.SaveFileAsync();
 
         var relativeUrl = linker.GetPathByName(nameof(GetFileAsync), new { request.ConversationId });
         return Results.Accepted(relativeUrl,

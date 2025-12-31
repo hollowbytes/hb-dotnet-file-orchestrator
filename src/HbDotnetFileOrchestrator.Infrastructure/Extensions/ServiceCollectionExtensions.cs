@@ -1,5 +1,7 @@
+using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
 using HbDotnetFileOrchestrator.Infrastructure.Connectors;
+using HbDotnetFileOrchestrator.Infrastructure.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Extensions;
@@ -17,5 +19,7 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(ConnectorOptions.SECTION)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        services.AddScoped<IMetadataProvider, MetadataProvider>();
     }
 }
