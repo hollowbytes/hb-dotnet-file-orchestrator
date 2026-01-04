@@ -1,6 +1,6 @@
-namespace HbDotnetFileOrchestrator.Infrastructure.Connectors;
+namespace HbDotnetFileOrchestrator.Domain.Models;
 
-public static class ConnectionTypes
+public static class StorageTypes
 {
     public static string BLOB = "blob";
     public static string SFTP = "sftp";

@@ -6,20 +6,22 @@ namespace HbDotnetFileOrchestrator.Application.Files;
 public class FilesService(
     ILogger<FilesService> logger,
     IMetadataProvider metadataProvider,
-    IRulesEngine rulesEngine,
-    IConnectorProvider connectorProvider
+    IRuleEvaluator ruleEvaluator,
+    IFileLocationResolver fileLocationResolver,
+    IFileWriterFactory fileWriterFactory
 ) : IFilesService
 {
     public async Task SaveFileAsync(CancellationToken cancellationToken = default)
     {
         var metadata = metadataProvider.GetMetadata();
-        var providers = await rulesEngine.RunAsync(metadata, cancellationToken);
+        var providers = await ruleEvaluator.RunAsync(metadata, cancellationToken);
 
         foreach (var options in providers)
         {
-            var provider = connectorProvider.CreateConnector(options);
+            var location = await fileLocationResolver.ResolveAsync(metadata, options, cancellationToken);
 
-            await provider.SaveAsync(options, cancellationToken);
+            var provider = fileWriterFactory.Create(options);
+            await provider.SaveAsync(location, cancellationToken);
         }
     }
 }

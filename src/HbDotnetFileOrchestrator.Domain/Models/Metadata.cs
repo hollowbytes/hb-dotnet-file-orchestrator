@@ -1,5 +1,5 @@
 namespace HbDotnetFileOrchestrator.Domain.Models;
 
 public record Metadata(
-    IDictionary<string, string?[]> Headers,
-    IDictionary<string, string?[]> Query);
+    Dictionary<string, string?[]> Headers,
+    Dictionary<string, string?[]> Query);

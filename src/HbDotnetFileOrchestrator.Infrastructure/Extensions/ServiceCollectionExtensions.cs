@@ -1,8 +1,8 @@
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
-using HbDotnetFileOrchestrator.Infrastructure.Connectors;
-using HbDotnetFileOrchestrator.Infrastructure.Connectors.FileSystem;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
+using HbDotnetFileOrchestrator.Infrastructure.Storage;
+using HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Extensions;
@@ -16,14 +16,16 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddOptions<ConnectorOptions>()
-            .BindConfiguration(ConnectorOptions.SECTION)
+        services.AddOptions<StorageOptions>()
+            .BindConfiguration(StorageOptions.SECTION)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
         services.AddScoped<IMetadataProvider, MetadataProvider>();
-        services.AddScoped<IRulesEngine, ConnectorRulesEngine>();
-        services.AddScoped<IConnectorProvider, ConnectorProvider>();
-        services.AddScoped<IConnectorStrategy<FileSystemConnectorOptions>, FileSystemConnectorStrategy>();
+        services.AddScoped<IRuleEvaluator, StorageRuleEvaluator>();
+        services.AddScoped<IFileWriterFactory, StorageFactory>();
+        services.AddScoped<IFileLocationResolver, StorageLocationResolver>();
+
+        services.AddScoped<IFileWriter<FileSystemStorageOptions>, FileSystemFileWriter>();
     }
 }

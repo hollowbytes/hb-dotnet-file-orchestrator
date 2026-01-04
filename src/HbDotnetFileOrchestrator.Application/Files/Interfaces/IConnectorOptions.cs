@@ -1,9 +1,0 @@
-namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
-
-public interface IConnectorOptions
-{
-    public string Id { get; set; }
-    public string Rule { get; set; }
-
-    public string Type { get; }
-}
