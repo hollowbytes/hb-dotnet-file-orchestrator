@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -11,17 +12,22 @@ public class FilesService(
     IFileWriterFactory fileWriterFactory
 ) : IFilesService
 {
-    public async Task SaveFileAsync(CancellationToken cancellationToken = default)
+    public async Task<Result> SaveFileAsync(CancellationToken cancellationToken = default)
     {
         var metadata = metadataProvider.GetMetadata();
         var providers = await ruleEvaluator.RunAsync(metadata, cancellationToken);
 
         foreach (var options in providers)
         {
-            var location = await fileLocationResolver.ResolveAsync(metadata, options, cancellationToken);
+            var locationResult = await fileLocationResolver.ResolveAsync(metadata, options, cancellationToken);
 
+            if (locationResult.IsFailure) return locationResult;
+
+            var location = locationResult.Value;
             var provider = fileWriterFactory.Create(options);
             await provider.SaveAsync(location, cancellationToken);
         }
+
+        return Result.Success();
     }
 }

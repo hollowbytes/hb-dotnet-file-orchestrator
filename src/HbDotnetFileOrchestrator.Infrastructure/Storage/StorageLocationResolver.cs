@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using Fluid;
 using Fluid.Values;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
@@ -10,10 +11,11 @@ public class StorageLocationResolver : IFileLocationResolver
 {
     private static readonly FluidParser PARSER = new();
 
-    public ValueTask<string> ResolveAsync(Metadata metadata, IStorageOptions options,
+    public async Task<Result<string>> ResolveAsync(Metadata metadata, IStorageOptions options,
         CancellationToken cancellationToken = default)
     {
-        if (!PARSER.TryParse(options.Destination, out var template, out var error)) return ValueTask.FromResult(error);
+        if (!PARSER.TryParse(options.Destination, out var template, out var error))
+            return Result.Failure<string>(error);
 
         var parserOptions = new TemplateOptions
         {
@@ -24,6 +26,7 @@ public class StorageLocationResolver : IFileLocationResolver
 
         var context = new TemplateContext(parserOptions);
         context.SetValue("metadata", metadata);
-        return template.RenderAsync(context);
+        var location = await template.RenderAsync(context);
+        return Result.Success(location);
     }
 }

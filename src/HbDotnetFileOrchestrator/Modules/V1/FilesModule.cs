@@ -1,5 +1,5 @@
+using CSharpFunctionalExtensions.HttpResults.ResultExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Modules.Common;
 using HbDotnetFileOrchestrator.Modules.V1.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,12 +36,8 @@ public static class FilesModule
 
         logger.LogInformation("Received file");
 
-        await filesService.SaveFileAsync();
-
-        var relativeUrl = linker.GetPathByName(nameof(GetFileAsync), new { request.ConversationId });
-        return Results.Accepted(relativeUrl,
-            new ApiResponse(request.ConversationId)
-        );
+        var result = await filesService.SaveFileAsync();
+        return result.ToStatusCodeHttpResult(StatusCodes.Status202Accepted);
     }
 
     private static IResult GetFileAsync

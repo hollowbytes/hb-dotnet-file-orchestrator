@@ -21,9 +21,4 @@ public class StorageOptions
         .Where(prop => typeof(IStorageOptions[]).IsAssignableFrom(prop.PropertyType))
         .SelectMany(prop => prop.GetValue(this) as IStorageOptions[] ?? [])
         .ToArray();
-
-    public IStorageOptions Find(string id)
-    {
-        return All.Single(x => x.Id == id);
-    }
 }
