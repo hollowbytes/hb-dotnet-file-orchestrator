@@ -19,7 +19,7 @@ public class StorageLocationResolver : IFileLocationResolver
         {
             ModelNamesComparer = StringComparer.InvariantCultureIgnoreCase,
             MemberAccessStrategy = new UnsafeMemberAccessStrategy(),
-            Undefined = name => ValueTask.FromResult<FluidValue>(new StringValue($"[{name} not found]"))
+            Undefined = name => ValueTask.FromResult<FluidValue>(new StringValue($"Error - '{name}' not found"))
         };
 
         var context = new TemplateContext(parserOptions);

@@ -40,8 +40,8 @@ public class StorageRuleEvaluator(
         {
             Options = option,
             RuleName = option.Id,
-            Expression = option.Rule
-            //ErrorMessage = $"Failed to evaluate ({option.Type}) {option.Id}: '{option.Rule}'"
+            Expression = option.Rule,
+            ErrorMessage = $"Error - Failed to evaluate ({option.Type}) {option.Id}: '{option.Rule}'"
         };
     }
 
