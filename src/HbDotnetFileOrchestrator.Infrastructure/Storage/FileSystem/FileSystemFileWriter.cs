@@ -15,10 +15,12 @@ public class FileSystemFileWriter : IFileWriter<FileSystemStorageOptions>
 
         var path = Path.Combine(location, file.Name);
 
-        if (!File.Exists(path))
+        if (File.Exists(path))
         {
-            await File.WriteAllBytesAsync(path, file.Contents, cancellationToken);
+            return Result.Failure($"File '{path}' already exists");
         }
+
+        await File.WriteAllBytesAsync(path, file.Contents, cancellationToken);
         return Result.Success();
     }
 }
