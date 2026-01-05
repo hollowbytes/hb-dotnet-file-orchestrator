@@ -31,17 +31,13 @@ public static class FilesModule
         using var scope = logger.BeginScope(new Dictionary<string, object>
         {
             { "ConversationId", request.ConversationId },
-            { "FileName", request.File.FileName },
-            { "FileLength", request.File.Length }
+            { "FileName", request.FormFile.FileName },
+            { "FileLength", request.FormFile.Length }
         });
 
         logger.LogInformation("Received file");
 
-        await using var contents = new MemoryStream();
-        await request.File.CopyToAsync(contents);
-        contents.Seek(0, SeekOrigin.Begin);
-        var file = new ReceivedFile(request.File.FileName, request.File.Length, contents.ToArray());
-
+        var file = await request.CopyFileAsync();
         var result = await filesService.SaveFileAsync(file);
         return result.ToStatusCodeHttpResult(StatusCodes.Status202Accepted);
     }

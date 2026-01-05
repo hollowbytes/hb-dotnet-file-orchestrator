@@ -25,27 +25,21 @@ public class StorageRuleEvaluator(
             .ToArray();
     }
 
-    private static Workflow ToWorkflow(StorageOptions options)
+    private static Workflow ToWorkflow(StorageOptions options) => new()
     {
-        return new Workflow
-        {
-            WorkflowName = "default",
-            Rules = options.All.Select(ToValueRule).ToArray()
-        };
-    }
+        WorkflowName = "default",
+        Rules = options.All.Select(ToValueRule).ToArray()
+    };
 
-    private static ValueRule ToValueRule(IStorageOptions option)
+    private static ValueRule ToValueRule(IStorageOptions option) => new()
     {
-        return new ValueRule
-        {
-            Options = option,
-            RuleName = option.Id,
-            Expression = option.Rule,
-            ErrorMessage = $"Error - Failed to evaluate ({option.Type}) {option.Id}: '{option.Rule}'"
-        };
-    }
+        Options = option,
+        RuleName = option.Id,
+        Expression = option.Rule,
+        ErrorMessage = $"Error - Failed to evaluate ({option.Type}) {option.Id}: '{option.Rule}'"
+    };
 
-    private class ValueRule : Rule
+    private class ValueRule() : Rule
     {
         public required IStorageOptions Options { get; init; }
     }
