@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+using HbDotnetFileOrchestrator.Domain.Models;
 using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Application.Files;
@@ -12,22 +13,24 @@ public class FilesService(
     IFileWriterFactory fileWriterFactory
 ) : IFilesService
 {
-    public async Task<Result> SaveFileAsync(CancellationToken cancellationToken = default)
+    public async Task<Result> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default)
     {
-        var metadata = metadataProvider.GetMetadata();
+        var metadata = await metadataProvider.GetMetadataAsync(cancellationToken);
         var providers = await ruleEvaluator.RunAsync(metadata, cancellationToken);
 
         foreach (var options in providers)
         {
             var locationResult = await fileLocationResolver.ResolveAsync(metadata, options, cancellationToken);
 
-            if (locationResult.IsFailure) return locationResult;
+            if (locationResult.IsFailure)
+            {
+                return locationResult;
+            }
 
             var location = locationResult.Value;
             var provider = fileWriterFactory.Create(options);
-            await provider.SaveAsync(location, cancellationToken);
+            return await provider.SaveAsync(receivedFile, location, cancellationToken);
         }
-
         return Result.Success();
     }
 }

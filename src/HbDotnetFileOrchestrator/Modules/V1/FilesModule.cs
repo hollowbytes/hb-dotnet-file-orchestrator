@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions.HttpResults.ResultExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+using HbDotnetFileOrchestrator.Domain.Models;
 using HbDotnetFileOrchestrator.Modules.V1.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +37,12 @@ public static class FilesModule
 
         logger.LogInformation("Received file");
 
-        var result = await filesService.SaveFileAsync();
+        await using var contents = new MemoryStream();
+        await request.File.CopyToAsync(contents);
+        contents.Seek(0, SeekOrigin.Begin);
+        var file = new ReceivedFile(request.File.FileName, request.File.Length, contents.ToArray());
+
+        var result = await filesService.SaveFileAsync(file);
         return result.ToStatusCodeHttpResult(StatusCodes.Status202Accepted);
     }
 

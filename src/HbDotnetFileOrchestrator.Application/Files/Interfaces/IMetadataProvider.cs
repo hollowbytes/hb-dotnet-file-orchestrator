@@ -4,5 +4,5 @@ namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
 public interface IMetadataProvider
 {
-    public Metadata GetMetadata();
+    public Task<Metadata> GetMetadataAsync(CancellationToken cancellationToken = default);
 }
