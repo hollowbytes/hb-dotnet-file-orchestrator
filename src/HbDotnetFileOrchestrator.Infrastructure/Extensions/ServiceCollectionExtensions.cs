@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
@@ -21,6 +22,8 @@ public static class ServiceCollectionExtensions
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
+        services.AddSingleton<IFileSystem>(new FileSystem());
+        
         services.AddScoped<IMetadataProvider, MetadataProvider>();
         services.AddScoped<IRuleEvaluator, StorageRuleEvaluator>();
         services.AddScoped<IFileWriterFactory, StorageFactory>();

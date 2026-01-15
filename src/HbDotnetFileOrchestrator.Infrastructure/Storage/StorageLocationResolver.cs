@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CSharpFunctionalExtensions;
 using Fluid;
 using Fluid.Values;
@@ -26,6 +27,7 @@ public class StorageLocationResolver : IFileLocationResolver
 
         var context = new TemplateContext(parserOptions);
         context.SetValue("metadata", metadata);
+        
         var location = await template.RenderAsync(context);
         return Result.Success(location);
     }

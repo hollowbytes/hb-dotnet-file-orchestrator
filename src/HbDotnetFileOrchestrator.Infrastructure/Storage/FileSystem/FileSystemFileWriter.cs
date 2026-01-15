@@ -1,26 +1,35 @@
+using System.IO.Abstractions;
 using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
+using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
 
-public class FileSystemFileWriter : IFileWriter<FileSystemStorageOptions>
+public class FileSystemFileWriter
+(
+    ILogger<FileSystemFileWriter> logger,
+    IFileSystem fileSystem
+) : IFileWriter<FileSystemStorageOptions>
 {
     public async Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default)
     {
-        if (!Directory.Exists(location))
+        if (!fileSystem.Directory.Exists(location))
         {
-            Directory.CreateDirectory(location);
+            logger.LogInformation("Directory at '{Location}', attempting to create", location);
+            fileSystem.Directory.CreateDirectory(location);
         }
 
         var path = Path.Combine(location, file.Name);
 
-        if (File.Exists(path))
+        if (fileSystem.File.Exists(path))
         {
-            return Result.Failure($"File '{path}' already exists");
+            logger.LogInformation("File already exists at '{Path}'", path);
+            return Result.Failure($"File already exists at '{path}'");
         }
 
-        await File.WriteAllBytesAsync(path, file.Contents, cancellationToken);
+        await fileSystem.File.WriteAllBytesAsync(path, file.Contents, cancellationToken);
+        logger.LogInformation("File written to '{Path}'", path);
         return Result.Success();
     }
 }
