@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services)

@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage.Blob;
 
+[ExcludeFromCodeCoverage]
 public class BlobStorageOptions : IStorageOptions
 {
     public string Id { get; set; } = string.Empty;

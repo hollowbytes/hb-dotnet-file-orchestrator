@@ -13,27 +13,41 @@ public class MetadataProvider(ILogger<MetadataProvider> logger, IHttpContextAcce
     {
         var httpContext = httpContextAccessor.HttpContext;
 
-        if (httpContext == null)
+        if (httpContext is null)
         {
-            return Metadata.EMPTY;
+            // This is being called outside an http request lifecycle scope, or context accessor isn't registered
+            throw new InvalidOperationException();
         }
         
         var routeValues = httpContext.Request.RouteValues.ToDictionary(kv => kv.Key, kv => kv.Value?.ToString());
         var headers = httpContext.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToArray());
         var query = httpContext.Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
         
-        var formCollection = await httpContext.Request.ReadFormAsync(cancellationToken);
-        var form = formCollection.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
+        var files = await GetFormFiles(httpContext, cancellationToken);
+        var form = await GetFormProperties(httpContext, cancellationToken);
 
-        var files = formCollection.Files.Select(kv => new FileMetadata(
+        return new Metadata(headers, routeValues, query, form, files);
+    }
+    
+    private static async Task<FileMetadata[]> GetFormFiles(HttpContext httpContext, CancellationToken cancellationToken = default)
+    {
+        if (!httpContext.Request.HasFormContentType) return [];
+        
+        var formCollection = await httpContext.Request.ReadFormAsync(cancellationToken);
+        return formCollection.Files.Select(kv => new FileMetadata(
             kv.ContentType,
             kv.ContentDisposition,
             kv.Length,
             kv.Name,
             kv.FileName
-        ))
-        .ToArray();
-
-        return new Metadata(headers, routeValues, query, form, files);
+        )).ToArray();
+    }
+    
+    private static async Task<Dictionary<string, string?[]>> GetFormProperties(HttpContext httpContext, CancellationToken cancellationToken = default)
+    {
+        if (!httpContext.Request.HasFormContentType) return new Dictionary<string, string?[]>();
+        
+        var formCollection = await httpContext.Request.ReadFormAsync(cancellationToken);
+        return formCollection.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
     }
 }
