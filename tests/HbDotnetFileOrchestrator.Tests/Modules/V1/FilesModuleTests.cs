@@ -11,18 +11,20 @@ public class FilesModuleTests(WebApplicationFactory<Program> factory) : IClassFi
     private readonly IFixture _fixture =  new Fixture().Customize(new AutoMoqCustomization {  ConfigureMembers = true });
     private readonly HttpClient _sut = factory.CreateClient();
 
-    [Fact]
-    public async Task PostFileAsync_ReturnsOkAcceptedResult()
+    [Theory]
+    [InlineData("", HttpStatusCode.BadRequest)]
+    [InlineData("foo", HttpStatusCode.Created)]
+    public async Task PostFileAsync_ReturnsOkAcceptedResult(string content, HttpStatusCode expectedStatusCode)
     {
         // Arrange
         using var form = new MultipartFormDataContent();        
-        form.Add(new StringContent("foo"), "file", "file.txt");
+        form.Add(new StringContent(content), "file", "file.txt");
         
         // Act
         var actual = await _sut.PostAsync("/api/v1/files", form);
 
         // Assert
-        actual.StatusCode.ShouldBe(HttpStatusCode.Accepted);
+        actual.StatusCode.ShouldBe(expectedStatusCode);
     }
 
     [Fact]

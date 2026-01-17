@@ -1,12 +1,11 @@
 using HbDotnetFileOrchestrator.Domain.Models;
+using HbDotnetFileOrchestrator.Modules.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HbDotnetFileOrchestrator.Modules.V1.Requests;
 
-public record V1PostFileRequest([FromForm(Name = "file")] IFormFile FormFile)
+public record V1PostFileRequest([FromForm(Name = "file")] IFormFile FormFile) : ApiRequest
 {
-    public Guid ConversationId => Guid.NewGuid();
-    
     public async Task<ReceivedFile> CopyFileAsync(CancellationToken cancellationToken = default)
     {
         await using var contents = new MemoryStream();

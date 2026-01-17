@@ -1,15 +1,18 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HbDotnetFileOrchestrator.Modules.Common;
 
+[ExcludeFromCodeCoverage]
 public record ApiResponse(
-    Guid TraceId
+    Guid ConversationId
 )
 {
     public DateTime Timestamp => DateTime.UtcNow;
 }
 
+[ExcludeFromCodeCoverage]
 public record ApiResponse<T>(
-    Guid TraceId,
-    T Data
-) : ApiResponse(TraceId);
+    Guid ConversationId,
+    T Value
+) : ApiResponse(ConversationId);

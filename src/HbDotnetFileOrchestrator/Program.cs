@@ -1,3 +1,4 @@
+using FluentValidation;
 using HbDotnetFileOrchestrator.Application.Extensions;
 using HbDotnetFileOrchestrator.Infrastructure.Extensions;
 using HbDotnetFileOrchestrator.Modules.V1;
@@ -20,6 +21,8 @@ builder.Services.AddLogging(loggingBuilder =>
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddProblemDetails();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
