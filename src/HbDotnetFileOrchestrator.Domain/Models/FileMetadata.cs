@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace HbDotnetFileOrchestrator.Domain.Models;
 
+[ExcludeFromCodeCoverage]
 public record FileMetadata(
     string ContentType,
     /// <summary>
