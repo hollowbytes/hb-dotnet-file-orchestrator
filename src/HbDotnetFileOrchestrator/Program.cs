@@ -45,3 +45,6 @@ var v1Grouping = apiGrouping.MapGroup("v1");
 v1Grouping.MapV1FilesModule();
 
 app.Run();
+
+// For unit tests
+public partial class Program;
