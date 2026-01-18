@@ -21,13 +21,16 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageRule", b =>
+            modelBuilder.HasSequence("StorageBaseSequence");
+
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR [StorageBaseSequence]");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseSequence(b.Property<int>("Id"));
 
                     b.Property<string>("Destination")
                         .IsRequired()
@@ -43,11 +46,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<string>("Rule")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StorageTypeId")
+                    b.Property<int>("RuleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -55,12 +54,14 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.HasIndex("StorageTypeId");
+                    b.HasIndex("RuleId");
 
-                    b.ToTable("StorageRule");
+                    b.ToTable((string)null);
+
+                    b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageType", b =>
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageRule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,28 +79,39 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<string>("Rule")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("StorageType");
+                    b.ToTable("StorageRule");
+                });
+
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.FileSystemStorage", b =>
+                {
+                    b.HasBaseType("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase");
+
+                    b.ToTable("FileSystemStorage");
+                });
+
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase", b =>
+                {
+                    b.HasOne("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageRule", "StorageRule")
+                        .WithMany("Storages")
+                        .HasForeignKey("RuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StorageRule");
                 });
 
             modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageRule", b =>
                 {
-                    b.HasOne("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageType", "StorageType")
-                        .WithMany("StorageRules")
-                        .HasForeignKey("StorageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StorageType");
-                });
-
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageType", b =>
-                {
-                    b.Navigation("StorageRules");
+                    b.Navigation("Storages");
                 });
 #pragma warning restore 612, 618
         }

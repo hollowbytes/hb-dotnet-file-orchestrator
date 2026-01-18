@@ -10,19 +10,8 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "StorageType",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StorageType", x => x.Id);
-                });
+            migrationBuilder.CreateSequence(
+                name: "StorageBaseSequence");
 
             migrationBuilder.CreateTable(
                 name: "StorageRule",
@@ -30,37 +19,50 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StorageTypeId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Rule = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Destination = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StorageRule", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileSystemStorage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [StorageBaseSequence]"),
+                    RuleId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Destination = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileSystemStorage", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StorageRule_StorageType_StorageTypeId",
-                        column: x => x.StorageTypeId,
-                        principalTable: "StorageType",
+                        name: "FK_FileSystemStorage_StorageRule_RuleId",
+                        column: x => x.RuleId,
+                        principalTable: "StorageRule",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorageRule_Name",
-                table: "StorageRule",
+                name: "IX_FileSystemStorage_Name",
+                table: "FileSystemStorage",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorageRule_StorageTypeId",
-                table: "StorageRule",
-                column: "StorageTypeId");
+                name: "IX_FileSystemStorage_RuleId",
+                table: "FileSystemStorage",
+                column: "RuleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StorageType_Name",
-                table: "StorageType",
+                name: "IX_StorageRule_Name",
+                table: "StorageRule",
                 column: "Name",
                 unique: true);
         }
@@ -69,10 +71,13 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "StorageRule");
+                name: "FileSystemStorage");
 
             migrationBuilder.DropTable(
-                name: "StorageType");
+                name: "StorageRule");
+
+            migrationBuilder.DropSequence(
+                name: "StorageBaseSequence");
         }
     }
 }

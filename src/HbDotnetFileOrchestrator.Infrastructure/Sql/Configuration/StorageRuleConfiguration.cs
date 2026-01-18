@@ -8,6 +8,8 @@ public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRule>
 {
     public void Configure(EntityTypeBuilder<StorageRule> builder)
     {
+        builder.ToTable("StorageRule");
+        
         builder.HasKey(x => x.Id);
         
         builder.HasIndex(x => x.Name).IsUnique();
@@ -15,8 +17,8 @@ public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRule>
 
         builder.Property(x => x.RowVersion).IsRowVersion();
         
-        builder.HasOne(x => x.StorageType)
-            .WithMany(x => x.StorageRules)
-            .HasForeignKey(x => x.StorageTypeId);
+        builder.HasMany(x => x.Storages)
+            .WithOne(x => x.StorageRule)
+            .HasForeignKey(x => x.RuleId);
     }
 }

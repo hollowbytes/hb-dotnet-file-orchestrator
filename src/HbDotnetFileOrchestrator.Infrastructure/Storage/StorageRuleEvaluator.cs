@@ -1,6 +1,8 @@
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
+using HbDotnetFileOrchestrator.Infrastructure.Sql;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RulesEngine.Models;
@@ -9,7 +11,8 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
 public class StorageRuleEvaluator(
     ILogger<StorageRuleEvaluator> logger,
-    IOptions<StorageOptions> connectorOptions
+    IOptions<StorageOptions> connectorOptions,
+    FileOrchestratorDbContext context
 ) : IRuleEvaluator
 {
     public async Task<IStorageOptions[]> RunAsync(Metadata metadata, CancellationToken cancellationToken = default)
