@@ -16,9 +16,9 @@ public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRule>
         builder.Property(x => x.Name).IsRequired();
 
         builder.Property(x => x.RowVersion).IsRowVersion();
-        
+
         builder.HasMany(x => x.Storages)
             .WithOne(x => x.StorageRule)
-            .HasForeignKey(x => x.RuleId);
+            .HasForeignKey(f => f.RuleId);
     }
 }

@@ -12,7 +12,7 @@ public class StorageLocationResolver : IFileLocationResolver
 {
     private static readonly FluidParser PARSER = new();
 
-    public async Task<Result<string>> ResolveAsync(Metadata metadata, IStorageOptions options,
+    public async Task<Result<string>> ResolveAsync(Metadata metadata, IFileDestination options,
         CancellationToken cancellationToken = default)
     {
         if (!PARSER.TryParse(options.Destination, out var template, out var error))

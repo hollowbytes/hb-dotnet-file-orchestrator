@@ -8,13 +8,12 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
 public class StorageFactory(
     ILogger<StorageFactory> logger,
-    IOptions<StorageOptions> connectorOptions,
     IServiceProvider serviceProvider
 ) : IFileWriterFactory
 {
-    public IFileWriter Create(IStorageOptions options)
+    public IFileWriter Create(IFileDestination fileDestination)
     {
-        var connector = typeof(IFileWriter<>).MakeGenericType(options.GetType());
+        var connector = typeof(IFileWriter<>).MakeGenericType(fileDestination.GetType());
         return (IFileWriter)serviceProvider.GetRequiredService(connector);
     }
 }

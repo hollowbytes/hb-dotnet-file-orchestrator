@@ -1,49 +1,37 @@
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
-using HbDotnetFileOrchestrator.Infrastructure.Sql;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using RulesEngine.Models;
+using Rule = HbDotnetFileOrchestrator.Domain.Models.Rule;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
 public class StorageRuleEvaluator(
-    ILogger<StorageRuleEvaluator> logger,
-    IOptions<StorageOptions> connectorOptions,
-    FileOrchestratorDbContext context
+    ILogger<StorageRuleEvaluator> logger
 ) : IRuleEvaluator
 {
-    public async Task<IStorageOptions[]> RunAsync(Metadata metadata, CancellationToken cancellationToken = default)
+    public async Task<Rule[]> RunAsync(Rule[] rules, Metadata metadata, CancellationToken cancellationToken = default)
     {
-        var workflow = ToWorkflow(connectorOptions.Value);
+        var workflow = ToWorkflow(rules);
 
         var re = new RulesEngine.RulesEngine([workflow]);
         var result = await re.ExecuteAllRulesAsync(workflow.WorkflowName, new RuleParameter("metadata", metadata));
 
         return result.Where(x => x.IsSuccess)
-            .Select(x => x.Rule as ValueRule)
-            .Select(x => x!.Options)
+            .Select(x => new Rule(x.Rule.RuleName, x.Rule.Expression))
             .ToArray();
     }
 
-    private static Workflow ToWorkflow(StorageOptions options) => new()
+    private static Workflow ToWorkflow(Rule[] rules) => new()
     {
         WorkflowName = "default",
-        Rules = options.All.Select(ToValueRule).ToArray()
+        Rules = rules.Select(ToValueRule).ToArray()
     };
 
-    private static ValueRule ToValueRule(IStorageOptions option) => new()
+    private static RulesEngine.Models.Rule ToValueRule(Rule option) => new()
     {
-        Options = option,
-        RuleName = option.Id,
-        Expression = option.Rule,
-        ErrorMessage = $"Error - Failed to evaluate ({option.Type}) {option.Id}: '{option.Rule}'"
+        RuleName = option.Name,
+        Expression = option.Expression,
+        ErrorMessage = $"Error - Failed to evaluate {option.Name}: '{option.Expression}'"
     };
-
-    private class ValueRule() : Rule
-    {
-        public required IStorageOptions Options { get; init; }
-    }
 }

@@ -11,7 +11,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
-                name: "StorageBaseSequence");
+                name: "FileDestinationBaseSequence");
 
             migrationBuilder.CreateTable(
                 name: "StorageRule",
@@ -20,7 +20,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Rule = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expression = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -32,7 +32,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                 name: "FileSystemStorage",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [StorageBaseSequence]"),
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [FileDestinationBaseSequence]"),
                     RuleId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Destination = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -77,7 +77,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                 name: "StorageRule");
 
             migrationBuilder.DropSequence(
-                name: "StorageBaseSequence");
+                name: "FileDestinationBaseSequence");
         }
     }
 }

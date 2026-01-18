@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
+using HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
@@ -10,7 +11,7 @@ public class FileSystemFileWriter
 (
     ILogger<FileSystemFileWriter> logger,
     IFileSystem fileSystem
-) : IFileWriter<FileSystemStorageOptions>
+) : IFileWriter<FileSystemStorage>
 {
     public async Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default)
     {

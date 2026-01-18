@@ -9,4 +9,4 @@ public interface IFileWriter
     Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default);
 }
 
-public interface IFileWriter<in TOptions> : IFileWriter where TOptions : class, IStorageOptions;
+public interface IFileWriter<in TOptions> : IFileWriter where TOptions : class, IFileDestination;

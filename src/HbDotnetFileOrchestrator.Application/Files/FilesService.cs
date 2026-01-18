@@ -1,6 +1,8 @@
 using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
+using HbDotnetFileOrchestrator.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Application.Files;
@@ -8,7 +10,9 @@ namespace HbDotnetFileOrchestrator.Application.Files;
 public class FilesService(
     ILogger<FilesService> logger,
     IMetadataProvider metadataProvider,
+    IRuleRepository ruleRepository,
     IRuleEvaluator ruleEvaluator,
+    IIFileDestinationRepository fileDestinationRepository,
     IFileLocationResolver fileLocationResolver,
     IFileWriterFactory fileWriterFactory
 ) : IFilesService
@@ -16,20 +20,26 @@ public class FilesService(
     public async Task<Result> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default)
     {
         var metadata = await metadataProvider.GetMetadataAsync(cancellationToken);
-        var providers = await ruleEvaluator.RunAsync(metadata, cancellationToken);
+        
+        var rules = await ruleRepository.GetAllAsync(cancellationToken);
+        var evaluatedRules = await ruleEvaluator.RunAsync(rules, metadata, cancellationToken);
 
-        foreach (var options in providers)
+        foreach (var rule in evaluatedRules)
         {
-            var locationResult = await fileLocationResolver.ResolveAsync(metadata, options, cancellationToken);
+            var destinations = await fileDestinationRepository.GetDestinationsByRuleAsync(rule, cancellationToken);
 
-            if (locationResult.IsFailure)
+            foreach (var destination in destinations)
             {
-                return locationResult;
-            }
+                var locationResult = await fileLocationResolver.ResolveAsync(metadata, destination, cancellationToken);
 
-            var location = locationResult.Value;
-            var provider = fileWriterFactory.Create(options);
-            return await provider.SaveAsync(receivedFile, location, cancellationToken);
+                if (locationResult.IsFailure)
+                {
+                    return locationResult;
+                }
+
+                var provider = fileWriterFactory.Create(destination);
+                return await provider.SaveAsync(receivedFile, locationResult.Value, cancellationToken);
+            }
         }
         return Result.Success();
     }

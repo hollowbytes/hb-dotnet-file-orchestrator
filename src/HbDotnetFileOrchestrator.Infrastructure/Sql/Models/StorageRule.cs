@@ -6,9 +6,9 @@ public class StorageRule
     
     public string Name { get; set; } = string.Empty;
     
-    public string Rule { get; set; } = string.Empty;
+    public string Expression { get; set; } = string.Empty;
     
     public byte[] RowVersion { get; set; } = [];
     
-    public virtual ICollection<StorageBase> Storages { get; set; } = [];
+    public virtual ICollection<FileDestinationBase> Storages { get; set; } = [];
 }

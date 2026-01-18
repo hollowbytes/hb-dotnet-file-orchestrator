@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Configuration;
 
-public class StorageBaseConfiguration : IEntityTypeConfiguration<StorageBase>
+public class StorageBaseConfiguration : IEntityTypeConfiguration<FileDestinationBase>
 {
-    public void Configure(EntityTypeBuilder<StorageBase> builder)
+    public void Configure(EntityTypeBuilder<FileDestinationBase> builder)
     {
         builder.UseTpcMappingStrategy();
         

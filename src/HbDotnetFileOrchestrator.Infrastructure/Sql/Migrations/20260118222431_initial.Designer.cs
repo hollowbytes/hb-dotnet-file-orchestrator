@@ -3,16 +3,19 @@ using HbDotnetFileOrchestrator.Infrastructure.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
 {
-    [DbContext(typeof(FileOrchestratorDbContext))]
-    partial class FileOrchestratorDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(StorageDbContext))]
+    [Migration("20260118222431_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,14 +24,14 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.HasSequence("StorageBaseSequence");
+            modelBuilder.HasSequence("FileDestinationBaseSequence");
 
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase", b =>
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.FileDestinationBase", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR [StorageBaseSequence]");
+                        .HasDefaultValueSql("NEXT VALUE FOR [FileDestinationBaseSequence]");
 
                     SqlServerPropertyBuilderExtensions.UseSequence(b.Property<int>("Id"));
 
@@ -69,6 +72,10 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Expression")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -79,26 +86,22 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<string>("Rule")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("StorageRule");
+                    b.ToTable("StorageRule", (string)null);
                 });
 
             modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.FileSystemStorage", b =>
                 {
-                    b.HasBaseType("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase");
+                    b.HasBaseType("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.FileDestinationBase");
 
-                    b.ToTable("FileSystemStorage");
+                    b.ToTable("FileSystemStorage", (string)null);
                 });
 
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBase", b =>
+            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.FileDestinationBase", b =>
                 {
                     b.HasOne("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageRule", "StorageRule")
                         .WithMany("Storages")

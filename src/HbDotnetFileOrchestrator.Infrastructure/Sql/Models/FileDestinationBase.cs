@@ -1,6 +1,8 @@
+using HbDotnetFileOrchestrator.Domain.Interfaces;
+
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 
-public abstract class StorageBase
+public abstract class FileDestinationBase : IFileDestination
 {
     public int Id { get; set; }
     

@@ -1,9 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Infrastructure.Authentication;
+using HbDotnetFileOrchestrator.Domain.Repositories;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
 using HbDotnetFileOrchestrator.Infrastructure.Sql;
+using HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 using HbDotnetFileOrchestrator.Infrastructure.Storage;
 using HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
 using Microsoft.EntityFrameworkCore;
@@ -17,20 +18,10 @@ public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services)
     {
-        services.AddOptions<AuthenticationOptions>()
-            .BindConfiguration(AuthenticationOptions.SECTION)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
-        services.AddOptions<StorageOptions>()
-            .BindConfiguration(StorageOptions.SECTION)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
-        services.AddDbContext<FileOrchestratorDbContext>((provider, builder) =>
+        services.AddDbContext<StorageDbContext>((provider, builder) =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
-            var connectionString = config.GetConnectionString(FileOrchestratorDbContext.ConnectionStringKey);
+            var connectionString = config.GetConnectionString(StorageDbContext.ConnectionStringKey);
             builder.UseSqlServer(connectionString);
         });
 
@@ -40,7 +31,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRuleEvaluator, StorageRuleEvaluator>();
         services.AddScoped<IFileWriterFactory, StorageFactory>();
         services.AddScoped<IFileLocationResolver, StorageLocationResolver>();
+        
+        services.AddScoped<IRuleRepository, StorageRuleRepository>();
+        services.AddScoped<IIFileDestinationRepository, StorageRepository>();
 
-        services.AddScoped<IFileWriter<FileSystemStorageOptions>, FileSystemFileWriter>();
+        services.AddScoped<IFileWriter<FileSystemStorage>, FileSystemFileWriter>();
     }
 }
