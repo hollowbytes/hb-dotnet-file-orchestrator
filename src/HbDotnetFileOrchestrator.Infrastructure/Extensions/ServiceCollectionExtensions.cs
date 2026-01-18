@@ -3,8 +3,11 @@ using System.IO.Abstractions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Infrastructure.Authentication;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
+using HbDotnetFileOrchestrator.Infrastructure.Sql;
 using HbDotnetFileOrchestrator.Infrastructure.Storage;
 using HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Extensions;
@@ -23,6 +26,13 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(StorageOptions.SECTION)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+
+        services.AddDbContext<FileOrchestratorDbContext>((provider, builder) =>
+        {
+            var config = provider.GetRequiredService<IConfiguration>();
+            var connectionString = config.GetConnectionString(FileOrchestratorDbContext.ConnectionStringKey);
+            builder.UseSqlServer(connectionString);
+        });
 
         services.AddSingleton<IFileSystem>(new FileSystem());
         
