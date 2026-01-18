@@ -1,7 +1,10 @@
 ### DotnetCore template
 # .NET Core build folders
-[Bb]in/
-[Oo]bj/
+/[Bb]in/
+/[Oo]bj/
+
+# Weird efcore issue on linux
+bin\\Debug
 
 # Common node modules locations
 /node_modules

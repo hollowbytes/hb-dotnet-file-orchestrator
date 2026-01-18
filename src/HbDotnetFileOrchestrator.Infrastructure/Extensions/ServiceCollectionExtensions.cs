@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Domain.Repositories;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Repositories;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
 using HbDotnetFileOrchestrator.Infrastructure.Sql;
 using HbDotnetFileOrchestrator.Infrastructure.Sql.Models;

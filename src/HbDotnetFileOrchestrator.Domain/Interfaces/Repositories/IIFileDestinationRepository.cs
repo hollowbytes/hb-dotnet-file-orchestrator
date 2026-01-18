@@ -1,7 +1,6 @@
-using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Models;
 
-namespace HbDotnetFileOrchestrator.Domain.Repositories;
+namespace HbDotnetFileOrchestrator.Domain.Interfaces.Repositories;
 
 public interface IIFileDestinationRepository
 {

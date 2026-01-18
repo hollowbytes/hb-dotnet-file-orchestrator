@@ -1,6 +1,6 @@
 using HbDotnetFileOrchestrator.Domain.Models;
 
-namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
+namespace HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 
 public interface IMetadataProvider
 {

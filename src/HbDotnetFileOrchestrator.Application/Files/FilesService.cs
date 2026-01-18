@@ -1,8 +1,8 @@
 using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Domain.Interfaces;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Repositories;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 using HbDotnetFileOrchestrator.Domain.Models;
-using HbDotnetFileOrchestrator.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Application.Files;

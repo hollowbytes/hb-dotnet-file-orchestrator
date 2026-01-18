@@ -22,7 +22,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddProblemDetails();
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddValidatorsFromAssemblyContaining<HbDotnetFileOrchestrator.Program>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
@@ -47,4 +47,7 @@ v1Grouping.MapV1FilesModule();
 app.Run();
 
 // For unit tests
-public partial class Program;
+namespace HbDotnetFileOrchestrator
+{
+    public partial class Program;
+}

@@ -1,4 +1,4 @@
-using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 using HbDotnetFileOrchestrator.Domain.Models;
 using Microsoft.Extensions.Logging;
 using RulesEngine.Models;
