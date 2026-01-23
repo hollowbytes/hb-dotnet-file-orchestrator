@@ -4,19 +4,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Configuration;
 
-public class StorageBaseConfiguration : IEntityTypeConfiguration<StorageBaseDbo>
+public class StorageAuditConfiguration : IEntityTypeConfiguration<StorageAuditDbo>
 {
-    public void Configure(EntityTypeBuilder<StorageBaseDbo> builder)
+    public void Configure(EntityTypeBuilder<StorageAuditDbo> builder)
     {
-        builder.UseTpcMappingStrategy();
+        builder.ToTable("StorageAudit");
         
         builder.HasKey(x => x.Id);
         
-        builder.HasIndex(x => x.Name).IsUnique();
-        builder.Property(x => x.Name).IsRequired();
-
         builder.Property(x => x.RowVersion).IsRowVersion();
-
-        builder.Ignore(x => x.Type);
+        
+        builder.OwnsOne(p => p.Properties, ownedNavigationBuilder =>
+        {
+            ownedNavigationBuilder.ToJson();
+        });
     }
 }

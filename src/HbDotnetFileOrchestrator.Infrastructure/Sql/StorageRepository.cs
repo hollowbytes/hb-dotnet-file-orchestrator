@@ -13,8 +13,8 @@ public class StorageRepository
     public async Task<IFileDestination[]> GetDestinationsByRuleAsync(Rule rule, CancellationToken cancellationToken = default)
     {
         return await context.Storages
-            .Include(x => x.StorageRule)
-            .Where(x => x.StorageRule.Name == rule.Name)
+            .Include(x => x.StorageRuleDbo)
+            .Where(x => x.StorageRuleDbo.Name == rule.Name)
             .ToArrayAsync(cancellationToken);
     }
 }

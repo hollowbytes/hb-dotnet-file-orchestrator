@@ -5,5 +5,5 @@ namespace HbDotnetFileOrchestrator.Modules.Common;
 [ExcludeFromCodeCoverage]
 public record ApiRequest
 {
-    public Guid ConversationId => Guid.NewGuid();
+    public Guid ConversationId { get;  } = Guid.NewGuid();
 }

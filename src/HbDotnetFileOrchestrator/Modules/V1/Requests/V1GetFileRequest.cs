@@ -7,5 +7,6 @@ namespace HbDotnetFileOrchestrator.Modules.V1.Requests;
 
 [ExcludeFromCodeCoverage]
 public record V1GetFileRequest(
-    [FromRoute] Guid ConversationId
+    [FromRoute] Guid ConversationId,
+    [FromQuery] string? StorageName
 ) : ApiRequest;

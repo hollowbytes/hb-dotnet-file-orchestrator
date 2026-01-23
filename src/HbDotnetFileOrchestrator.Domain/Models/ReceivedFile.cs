@@ -4,6 +4,7 @@ namespace HbDotnetFileOrchestrator.Domain.Models;
 
 [ExcludeFromCodeCoverage]
 public record ReceivedFile(
+    Guid ConversationId,
     string Name,
     long Size,
     byte[] Contents

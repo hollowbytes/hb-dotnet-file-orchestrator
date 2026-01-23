@@ -1,6 +1,6 @@
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 
-public class StorageRule
+public class StorageRuleDbo
 {
     public int Id { get; set; }
     
@@ -10,5 +10,5 @@ public class StorageRule
     
     public byte[] RowVersion { get; set; } = [];
     
-    public virtual ICollection<FileDestinationBase> Storages { get; set; } = [];
+    public virtual ICollection<StorageBaseDbo> Storages { get; set; } = [];
 }

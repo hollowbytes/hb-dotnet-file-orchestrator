@@ -1,8 +1,8 @@
 using System.Net.Mime;
-using CSharpFunctionalExtensions;
-using CSharpFunctionalExtensions.HttpResults.ResultExtensions;
 using FluentValidation;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
+using HbDotnetFileOrchestrator.Application.Files.Models;
+using HbDotnetFileOrchestrator.Modules.Common;
 using HbDotnetFileOrchestrator.Modules.Extensions;
 using HbDotnetFileOrchestrator.Modules.V1.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -54,13 +54,9 @@ public static class FilesModule
         
         var file = await request.CopyFileAsync();
         var result = await filesService.SaveFileAsync(file);
-
-        return result
-            .Map(request.ToApiResponse)
-            .ToCreatedHttpResult(customizeProblemDetails: details =>
-            {
-                details.Extensions = request.ToProblemDetailsExtensions();
-            });
+        
+        var response = new ApiResponse<SavedFileResult[]>(request.ConversationId, result);
+        return Results.Json(response, statusCode: StatusCodes.Status201Created);
     }
 
     private static IResult GetFileAsync
@@ -77,7 +73,6 @@ public static class FilesModule
         logger.LogInformation("Requesting file");
 
         // TODO: Retrieve file
-
         return Results.File(new MemoryStream(), "application/text", "test.txt");
     }
 }

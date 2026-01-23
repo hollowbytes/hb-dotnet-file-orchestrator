@@ -4,17 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql;
 
-public class StorageDbContext : DbContext
+public class StorageDbContext(DbContextOptions<StorageDbContext> options) : DbContext(options)
 {
     public const string ConnectionStringKey = "FileOrchestratorDb";
 
-    public virtual DbSet<FileDestinationBase> Storages { get; set; }
+    public virtual DbSet<StorageBaseDbo> Storages { get; set; }
     
-    public virtual DbSet<StorageRule> StorageRules { get; set; }
-    
-    public StorageDbContext(DbContextOptions<StorageDbContext> options) : base(options)
-    {
-    }
+    public virtual DbSet<StorageRuleDbo> StorageRules { get; set; }
+
+    public virtual DbSet<StorageAuditDbo> StorageAudits { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

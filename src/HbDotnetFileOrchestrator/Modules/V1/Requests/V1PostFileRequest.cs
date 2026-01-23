@@ -11,6 +11,6 @@ public record V1PostFileRequest([FromForm(Name = "file")] IFormFile FormFile) : 
         await using var contents = new MemoryStream();
         await FormFile.CopyToAsync(contents, cancellationToken);
         contents.Seek(0, SeekOrigin.Begin);
-        return new ReceivedFile(FormFile.FileName, FormFile.Length, contents.ToArray());
+        return new ReceivedFile(ConversationId, FormFile.FileName, FormFile.Length, contents.ToArray());
     }
 }

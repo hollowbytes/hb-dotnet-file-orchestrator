@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Configuration;
 
-public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRule>
+public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRuleDbo>
 {
-    public void Configure(EntityTypeBuilder<StorageRule> builder)
+    public void Configure(EntityTypeBuilder<StorageRuleDbo> builder)
     {
         builder.ToTable("StorageRule");
         
@@ -18,7 +18,7 @@ public class StorageRuleConfiguration : IEntityTypeConfiguration<StorageRule>
         builder.Property(x => x.RowVersion).IsRowVersion();
 
         builder.HasMany(x => x.Storages)
-            .WithOne(x => x.StorageRule)
+            .WithOne(x => x.StorageRuleDbo)
             .HasForeignKey(f => f.RuleId);
     }
 }

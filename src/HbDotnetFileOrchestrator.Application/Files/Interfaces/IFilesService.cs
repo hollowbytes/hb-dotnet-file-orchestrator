@@ -1,9 +1,9 @@
-using CSharpFunctionalExtensions;
+using HbDotnetFileOrchestrator.Application.Files.Models;
 using HbDotnetFileOrchestrator.Domain.Models;
 
 namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
 public interface IFilesService
 {
-    public Task<Result> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default);
+    public Task<SavedFileResult[]> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default);
 }

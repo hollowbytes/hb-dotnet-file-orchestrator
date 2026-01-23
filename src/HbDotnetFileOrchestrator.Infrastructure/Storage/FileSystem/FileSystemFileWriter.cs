@@ -11,7 +11,7 @@ public class FileSystemFileWriter
 (
     ILogger<FileSystemFileWriter> logger,
     IFileSystem fileSystem
-) : IFileWriter<FileSystemStorage>
+) : IFileWriter<FileSystemStorageDbo>
 {
     public async Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default)
     {
