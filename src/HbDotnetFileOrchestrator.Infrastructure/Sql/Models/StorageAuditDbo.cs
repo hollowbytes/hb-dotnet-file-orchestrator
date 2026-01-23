@@ -2,7 +2,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 
 public class StorageAuditDbo
 {
-    public int Id { get; set; } = -1;
+    public int Id { get; set; }
     
     public Dictionary<string, object> Properties { get; set; } = new();
     

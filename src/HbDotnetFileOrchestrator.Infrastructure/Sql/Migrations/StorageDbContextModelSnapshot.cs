@@ -35,6 +35,10 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Properties")
+                        .IsRequired()
+                        .HasColumnType("json");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -119,26 +123,6 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                     b.HasBaseType("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBaseDbo");
 
                     b.ToTable("FileSystemStorage", (string)null);
-                });
-
-            modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageAuditDbo", b =>
-                {
-                    b.OwnsOne("System.Collections.Generic.Dictionary<string, object>", "Properties", b1 =>
-                        {
-                            b1.Property<int>("StorageAuditDboId");
-
-                            b1.HasKey("StorageAuditDboId");
-
-                            b1.ToTable("StorageAudit");
-
-                            b1.ToJson("Properties");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StorageAuditDboId");
-                        });
-
-                    b.Navigation("Properties")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("HbDotnetFileOrchestrator.Infrastructure.Sql.Models.StorageBaseDbo", b =>

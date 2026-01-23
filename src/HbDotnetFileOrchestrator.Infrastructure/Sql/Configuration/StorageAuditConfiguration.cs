@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,9 +15,11 @@ public class StorageAuditConfiguration : IEntityTypeConfiguration<StorageAuditDb
         
         builder.Property(x => x.RowVersion).IsRowVersion();
         
-        builder.OwnsOne(p => p.Properties, ownedNavigationBuilder =>
-        {
-            ownedNavigationBuilder.ToJson();
-        });
+        builder.Property(x => x.Properties)
+            .HasConversion(v => JsonSerializer.Serialize(v),
+                v => JsonSerializer.Deserialize<Dictionary<string, object>>(v)!
+            )
+            .HasColumnType("json");
+        
     }
 }

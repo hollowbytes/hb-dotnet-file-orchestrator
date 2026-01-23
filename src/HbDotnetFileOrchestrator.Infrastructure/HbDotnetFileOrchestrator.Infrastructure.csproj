@@ -32,4 +32,8 @@
         <PackageReference Include="System.IO.Abstractions" Version="22.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Sql\Migrations\" />
+    </ItemGroup>
+
 </Project>

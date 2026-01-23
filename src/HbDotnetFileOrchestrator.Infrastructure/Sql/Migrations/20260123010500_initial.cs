@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +12,22 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
-                name: "FileDestinationBaseSequence");
+                name: "StorageBaseDboSequence");
+
+            migrationBuilder.CreateTable(
+                name: "StorageAudit",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Properties = table.Column<string>(type: "json", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StorageAudit", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "StorageRule",
@@ -32,7 +48,7 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                 name: "FileSystemStorage",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [FileDestinationBaseSequence]"),
+                    Id = table.Column<int>(type: "int", nullable: false, defaultValueSql: "NEXT VALUE FOR [StorageBaseDboSequence]"),
                     RuleId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Destination = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -74,10 +90,13 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Migrations
                 name: "FileSystemStorage");
 
             migrationBuilder.DropTable(
+                name: "StorageAudit");
+
+            migrationBuilder.DropTable(
                 name: "StorageRule");
 
             migrationBuilder.DropSequence(
-                name: "FileDestinationBaseSequence");
+                name: "StorageBaseDboSequence");
         }
     }
 }

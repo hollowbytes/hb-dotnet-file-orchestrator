@@ -30,9 +30,9 @@ public class FilesService(
         
         var results = new List<SavedFileResult>();
         var audit = new Audit()
-            .AddProperty("ConversationId", receivedFile.ConversationId)
+            .AddProperty("ConversationId", receivedFile.ConversationId.ToString())
             .AddProperty("FileName", receivedFile.Name)
-            .AddProperty("FileSize", receivedFile.Size);
+            .AddProperty("FileSize", receivedFile.Size.ToString());
         
         logger.LogInformation("Running {Count} rules...", rules.Length);
         
