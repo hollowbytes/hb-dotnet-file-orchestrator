@@ -1,5 +1,4 @@
-using System.Runtime.CompilerServices;
-using CSharpFunctionalExtensions;
+using System.Text.Json;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Application.Files.Models;
 using HbDotnetFileOrchestrator.Domain.Interfaces;
@@ -10,8 +9,8 @@ using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Application.Files;
 
-public class FilesService(
-    ILogger<FilesService> logger,
+public class FileWriterService(
+    ILogger<FileWriterService> logger,
     IMetadataProvider metadataProvider,
     IRuleRepository ruleRepository,
     IRuleEvaluator ruleEvaluator,
@@ -19,7 +18,7 @@ public class FilesService(
     IFileLocationResolver fileLocationResolver,
     IFileWriterFactory fileWriterFactory,
     IAuditRepository auditRepository
-) : IFilesService
+) : IFileWriterService
 {
     public async Task<SavedFileResult[]> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default)
     {
@@ -32,7 +31,8 @@ public class FilesService(
         var audit = new Audit()
             .AddProperty("ConversationId", receivedFile.ConversationId.ToString())
             .AddProperty("FileName", receivedFile.Name)
-            .AddProperty("FileSize", receivedFile.Size.ToString());
+            .AddProperty("FileSize", receivedFile.Size.ToString())
+            .AddProperty("Metadata", metadata);
         
         logger.LogInformation("Running {Count} rules...", rules.Length);
         
@@ -55,6 +55,7 @@ public class FilesService(
                     {
                         var response = await SaveFileAsync(receivedFile, metadata, rule, destination, cancellationToken);
                         saveAudit.AddProperty("Error", response.Error ?? string.Empty);
+                        saveAudit.AddProperty("FileLocation", response.FileLocation ?? string.Empty);
                         
                         results.Add(response);
                     });
@@ -76,14 +77,15 @@ public class FilesService(
         {
             return response with { Error = fileLocationResult.Error };
         }
-
+        
         var fileWriter = fileWriterFactory.Create(destination);
         var saveResult = await fileWriter.SaveAsync(receivedFile, fileLocationResult.Value, cancellationToken);
 
         if (saveResult.IsFailure)
         {
-            return response with { Error = saveResult.Error };
+            return response with { FileLocation = fileLocationResult.Value, Error = saveResult.Error };
         }
+
         return response with { FileLocation = fileLocationResult.Value };
     }
 }

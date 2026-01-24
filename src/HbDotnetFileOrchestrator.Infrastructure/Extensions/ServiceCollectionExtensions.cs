@@ -30,9 +30,12 @@ public static class ServiceCollectionExtensions
         
         services.AddScoped<IMetadataProvider, MetadataProvider>();
         services.AddScoped<IRuleEvaluator, StorageRuleEvaluator>();
-        services.AddScoped<IFileWriterFactory, StorageFactory>();
+        services.AddScoped<IFileWriterFactory, StorageWriterFactory>();
         services.AddScoped<IFileLocationResolver, StorageLocationResolver>();
         services.AddScoped<IAuditRepository, StorageAuditRepository>();
+
+        services.AddScoped<IFileReaderFactory, StorageReaderFactory>();
+        services.AddScoped<IFileReader<FileSystemStorageDbo>, FileSystemFileReader>();
         
         services.AddScoped<IRuleRepository, StorageRuleRepository>();
         services.AddScoped<IIFileDestinationRepository, StorageRepository>();

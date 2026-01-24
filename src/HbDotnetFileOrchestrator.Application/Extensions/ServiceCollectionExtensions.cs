@@ -8,6 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IFilesService, FilesService>();
+        services.AddScoped<IFileWriterService, FileWriterService>();
+        services.AddScoped<IFileReaderService, FileReaderService>();
     }
 }

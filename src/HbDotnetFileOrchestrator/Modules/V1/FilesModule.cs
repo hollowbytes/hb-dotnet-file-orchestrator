@@ -2,6 +2,7 @@ using System.Net.Mime;
 using FluentValidation;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Application.Files.Models;
+using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 using HbDotnetFileOrchestrator.Modules.Common;
 using HbDotnetFileOrchestrator.Modules.Extensions;
 using HbDotnetFileOrchestrator.Modules.V1.Requests;
@@ -30,7 +31,7 @@ public static class FilesModule
         [AsParameters] V1PostFileRequest request,
         [FromServices] ILogger<V1PostFileRequest> logger,
         [FromServices] IValidator<V1PostFileRequest> validator, 
-        [FromServices] IFilesService filesService
+        [FromServices] IFileWriterService fileWriterService
     )
     {
         using var scope = logger.BeginScope(new Dictionary<string, object>
@@ -53,16 +54,17 @@ public static class FilesModule
         }
         
         var file = await request.CopyFileAsync();
-        var result = await filesService.SaveFileAsync(file);
+        var result = await fileWriterService.SaveFileAsync(file);
         
         var response = new ApiResponse<SavedFileResult[]>(request.ConversationId, result);
         return Results.Json(response, statusCode: StatusCodes.Status201Created);
     }
 
-    private static IResult GetFileAsync
+    private static async Task<IResult> GetFileAsync
     (
         [AsParameters] V1GetFileRequest request,
         [FromServices] ILogger<V1GetFileRequest> logger,
+        [FromServices] IFileReaderService fileReaderService,
         CancellationToken cancellationToken)
     {
         using var scope = logger.BeginScope(new Dictionary<string, object>
@@ -72,7 +74,8 @@ public static class FilesModule
 
         logger.LogInformation("Requesting file");
 
-        // TODO: Retrieve file
+        await fileReaderService.ReadFileAsync(request.ConversationId, cancellationToken);
+       
         return Results.File(new MemoryStream(), "application/text", "test.txt");
     }
 }

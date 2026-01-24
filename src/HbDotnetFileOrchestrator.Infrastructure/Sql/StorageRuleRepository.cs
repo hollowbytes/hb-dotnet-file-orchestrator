@@ -12,11 +12,21 @@ public class StorageRuleRepository
     public Task<Rule[]> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return context.StorageRules
+            .AsNoTracking()
             .Select(x => new Rule
             (
                 Name: x.Name, 
                 Expression: x.Expression
             ))
             .ToArrayAsync(cancellationToken);
+    }
+    
+    public async Task<Rule> FindAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var value = await context.StorageRules
+            .AsNoTracking()
+            .FirstAsync(x => x.Name == name, cancellationToken);
+
+        return new Rule(Name: value.Name, Expression: value.Expression);
     }
 }

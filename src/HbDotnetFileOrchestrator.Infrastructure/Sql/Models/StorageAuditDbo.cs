@@ -4,7 +4,7 @@ public class StorageAuditDbo
 {
     public int Id { get; set; }
     
-    public Dictionary<string, object> Properties { get; set; } = new();
+    public virtual Dictionary<string, object> Properties { get; set; } = null!;
     
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     

@@ -17,4 +17,14 @@ public class StorageRepository
             .Where(x => x.StorageRuleDbo.Name == rule.Name)
             .ToArrayAsync(cancellationToken);
     }
+    
+    public async Task<IFileDestination> GetDestinationByRuleAsync(string rule, string destinationName, CancellationToken cancellationToken = default)
+    {
+        return await context.Storages
+            .Include(x => x.StorageRuleDbo)
+            .SingleAsync(x =>
+                x.Name == destinationName && x.StorageRuleDbo.Name == rule, 
+                cancellationToken
+            );
+    }
 }

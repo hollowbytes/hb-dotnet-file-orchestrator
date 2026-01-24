@@ -9,4 +9,7 @@ namespace HbDotnetFileOrchestrator.Modules.V1.Requests;
 public record V1GetFileRequest(
     [FromRoute] Guid ConversationId,
     [FromQuery] string? StorageName
-) : ApiRequest;
+) : ApiRequest
+{
+    public override Guid ConversationId { get; } = ConversationId;
+}

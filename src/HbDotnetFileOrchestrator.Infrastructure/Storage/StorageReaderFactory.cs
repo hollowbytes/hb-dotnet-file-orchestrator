@@ -6,14 +6,14 @@ using Microsoft.Extensions.Options;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
-public class StorageFactory(
-    ILogger<StorageFactory> logger,
+public class StorageReaderFactory(
+    ILogger<StorageReaderFactory> logger,
     IServiceProvider serviceProvider
-) : IFileWriterFactory
+) : IFileReaderFactory
 {
-    public IFileWriter Create(IFileDestination fileDestination)
+    public IFileReader Create(IFileDestination fileDestination)
     {
-        var connector = typeof(IFileWriter<>).MakeGenericType(fileDestination.GetType());
-        return (IFileWriter)serviceProvider.GetRequiredService(connector);
+        var connector = typeof(IFileReader<>).MakeGenericType(fileDestination.GetType());
+        return (IFileReader)serviceProvider.GetRequiredService(connector);
     }
 }

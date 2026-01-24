@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace HbDotnetFileOrchestrator.Modules.Common;
 
 [ExcludeFromCodeCoverage]
-public record ApiRequest
+public abstract record ApiRequest
 {
-    public Guid ConversationId { get;  } = Guid.NewGuid();
+    public virtual Guid ConversationId { get; } = Guid.NewGuid();
 }

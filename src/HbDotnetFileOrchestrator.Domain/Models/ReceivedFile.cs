@@ -10,5 +10,5 @@ public record ReceivedFile(
     byte[] Contents
 )
 {
-    public DateTime ReceivedDate => DateTime.UtcNow;
+    public DateTime ReceivedDate { get; } = DateTime.UtcNow;
 };

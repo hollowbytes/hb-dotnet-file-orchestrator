@@ -14,12 +14,18 @@ public class StorageAuditConfiguration : IEntityTypeConfiguration<StorageAuditDb
         builder.HasKey(x => x.Id);
         
         builder.Property(x => x.RowVersion).IsRowVersion();
-        
+
         builder.Property(x => x.Properties)
-            .HasConversion(v => JsonSerializer.Serialize(v),
-                v => JsonSerializer.Deserialize<Dictionary<string, object>>(v)!
-            )
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<Dictionary<string, object>>(v, (JsonSerializerOptions?)null)!)
             .HasColumnType("json");
-        
+        //.HasColumnType("json");
+
+        // builder.OwnsOne(x => x.Properties, o =>
+        // {
+        //     o.ToJson();
+        // });
+
     }
 }

@@ -4,9 +4,13 @@ public record Audit
 {
     private Dictionary<string, object> Properties { get; init; }
 
-    public Audit()
+    public Audit() : this(new Dictionary<string, object>())
     {
-        Properties = new Dictionary<string, object>();
+    }
+    
+    public Audit(Dictionary<string, object> properties)
+    {
+        Properties = properties;
     }
 
     public Audit CreateScope() => new ()
