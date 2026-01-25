@@ -2,7 +2,7 @@ using HbDotnetFileOrchestrator.Domain.Interfaces;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 
-public abstract class StorageBaseDbo : IFileDestination
+public abstract class StorageBaseDbo : IFileDirectory
 {
     public int Id { get; set; }
     
@@ -10,7 +10,7 @@ public abstract class StorageBaseDbo : IFileDestination
     
     public string Name { get; set; } = string.Empty;
     
-    public string Destination  { get; set; } = string.Empty;
+    public string Expression  { get; set; } = string.Empty;
     
     public byte[] RowVersion { get; set; } = [];
     

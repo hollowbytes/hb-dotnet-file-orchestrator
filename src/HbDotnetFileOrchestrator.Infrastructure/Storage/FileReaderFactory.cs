@@ -2,18 +2,17 @@ using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
-public class StorageReaderFactory(
-    ILogger<StorageReaderFactory> logger,
+public class FileReaderFactory(
+    ILogger<FileReaderFactory> logger,
     IServiceProvider serviceProvider
 ) : IFileReaderFactory
 {
-    public IFileReaderStrategy Create(IFileDestination fileDestination)
+    public IFileReaderStrategy Create(IFileDirectory fileDirectory)
     {
-        var connector = typeof(IFileReaderStrategy<>).MakeGenericType(fileDestination.GetType());
+        var connector = typeof(IFileReaderStrategy<>).MakeGenericType(fileDirectory.GetType());
         return (IFileReaderStrategy)serviceProvider.GetRequiredService(connector);
     }
 }

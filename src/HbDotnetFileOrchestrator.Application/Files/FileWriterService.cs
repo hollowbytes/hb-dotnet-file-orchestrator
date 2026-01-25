@@ -14,8 +14,8 @@ public class FileWriterService(
     IMetadataProvider metadataProvider,
     IRuleRepository ruleRepository,
     IRuleEvaluator ruleEvaluator,
-    IIFileDestinationRepository fileDestinationRepository,
-    IFileLocationResolver fileLocationResolver,
+    IFileDirectoryRepository fileDirectoryRepository,
+    IDirectoryResolver directoryResolver,
     IFileWriterFactory fileWriterFactory,
     IAuditRepository auditRepository
 ) : IFileWriterService
@@ -24,13 +24,18 @@ public class FileWriterService(
     {
         var metadata = await metadataProvider.GetMetadataAsync(cancellationToken);
         var rules = await ruleRepository.GetAllAsync(cancellationToken);
-        var evaluatedRules = await ruleEvaluator.RunAsync(rules, metadata, cancellationToken);
+        var ruleResults = await ruleEvaluator.RunAsync(rules, metadata, cancellationToken);
         
         var results = new List<SavedFileResult>();
         
-        foreach (var rule in evaluatedRules)
+        foreach (var rule in ruleResults)
         {
-            var destinations = await fileDestinationRepository.GetDestinationsByRuleAsync(rule, cancellationToken);
+            if (rule.IsFailure)
+            {
+                continue;
+            }
+            
+            var destinations = await fileDirectoryRepository.GetDestinationsByRuleAsync(rule, cancellationToken);
             
             logger.LogInformation("Running '{Rule}' with '{Count}' destinations", rule.Name, destinations.Length);
             
@@ -44,7 +49,7 @@ public class FileWriterService(
                     .AddProperty("Rule", rule.Name)
                     .AddProperty("DestinationName", destination.Name)
                     .AddProperty("DestinationType", destination.Type)
-                    .AddProperty("Destination", destination.Destination)
+                    .AddProperty("Destination", destination.Expression)
                     .AuditActionAsync(async saveAudit =>
                     {
                         var response = await SaveFileAsync(receivedFile, metadata, rule, destination, cancellationToken);
@@ -60,18 +65,18 @@ public class FileWriterService(
         return results.ToArray();
     }
 
-    private async Task<SavedFileResult> SaveFileAsync(ReceivedFile receivedFile, Metadata metadata, Rule rule, IFileDestination destination, CancellationToken cancellationToken = default)
+    private async Task<SavedFileResult> SaveFileAsync(ReceivedFile receivedFile, Metadata metadata, Rule rule, IFileDirectory directory, CancellationToken cancellationToken = default)
     {
-        var response = new SavedFileResult(rule.Name, destination.Name, destination.Type, receivedFile.Name);  
+        var response = new SavedFileResult(rule.Name, directory.Name, directory.Type, receivedFile.Name);  
                 
-        var fileLocationResult = await fileLocationResolver.ResolveAsync(metadata, destination, cancellationToken);
+        var fileLocationResult = await directoryResolver.ResolveAsync(metadata, directory, cancellationToken);
 
         if (fileLocationResult.IsFailure)
         {
             return response with { Error = fileLocationResult.Error };
         }
         
-        var fileWriter = fileWriterFactory.Create(destination);
+        var fileWriter = fileWriterFactory.Create(directory);
         var saveResult = await fileWriter.SaveAsync(receivedFile, fileLocationResult.Value, cancellationToken);
 
         if (saveResult.IsFailure)

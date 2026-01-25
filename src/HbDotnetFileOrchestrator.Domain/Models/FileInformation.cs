@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace HbDotnetFileOrchestrator.Domain.Models;
 
 [ExcludeFromCodeCoverage]
-public record FileMetadata(
+public record FileInformation(
     string ContentType,
     /// <summary>
     /// Gets the raw Content-Disposition header of the uploaded file.

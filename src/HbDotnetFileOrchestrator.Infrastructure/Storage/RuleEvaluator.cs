@@ -6,19 +6,20 @@ using Rule = HbDotnetFileOrchestrator.Domain.Models.Rule;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
-public class StorageRuleEvaluator(
-    ILogger<StorageRuleEvaluator> logger
+public class RuleEvaluator
+(
+    ILogger<RuleEvaluator> logger
 ) : IRuleEvaluator
 {
-    public async Task<Rule[]> RunAsync(Rule[] rules, Metadata metadata, CancellationToken cancellationToken = default)
+    public async Task<RuleResult[]> RunAsync(Rule[] rules, Metadata metadata, CancellationToken cancellationToken = default)
     {
         var workflow = ToWorkflow(rules);
 
         var re = new RulesEngine.RulesEngine([workflow]);
         var result = await re.ExecuteAllRulesAsync(workflow.WorkflowName, new RuleParameter("metadata", metadata));
 
-        return result.Where(x => x.IsSuccess)
-            .Select(x => new Rule(x.Rule.RuleName, x.Rule.Expression))
+        return result
+            .Select(x => new RuleResult(x.Rule.RuleName, x.Rule.Expression, x.Rule.ErrorMessage))
             .ToArray();
     }
 

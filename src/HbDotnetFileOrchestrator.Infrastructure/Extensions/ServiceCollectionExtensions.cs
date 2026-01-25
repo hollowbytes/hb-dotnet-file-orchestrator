@@ -29,16 +29,16 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IFileSystem>(new FileSystem());
         
         services.AddScoped<IMetadataProvider, MetadataProvider>();
-        services.AddScoped<IRuleEvaluator, StorageRuleEvaluator>();
-        services.AddScoped<IFileWriterFactory, StorageWriterFactory>();
-        services.AddScoped<IFileLocationResolver, StorageLocationResolver>();
+        services.AddScoped<IRuleEvaluator, RuleEvaluator>();
+        services.AddScoped<IFileWriterFactory, FileWriterFactory>();
+        services.AddScoped<IDirectoryResolver, DirectoryResolver>();
         services.AddScoped<IAuditRepository, StorageAuditRepository>();
 
-        services.AddScoped<IFileReaderFactory, StorageReaderFactory>();
+        services.AddScoped<IFileReaderFactory, FileReaderFactory>();
         services.AddScoped<IFileReaderStrategy<FileSystemStorageDbo>, FileSystemFileReader>();
         
         services.AddScoped<IRuleRepository, StorageRuleRepository>();
-        services.AddScoped<IIFileDestinationRepository, StorageRepository>();
+        services.AddScoped<IFileDirectoryRepository, StorageRepository>();
 
         services.AddScoped<IFileWriterStrategy<FileSystemStorageDbo>, FileSystemFileWriter>();
     }

@@ -9,4 +9,4 @@ public interface IFileWriterStrategy
     Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default);
 }
 
-public interface IFileWriterStrategy<in TOptions> : IFileWriterStrategy where TOptions : class, IFileDestination;
+public interface IFileWriterStrategy<in TOptions> : IFileWriterStrategy where TOptions : class, IFileDirectory;

@@ -1,10 +1,10 @@
 namespace HbDotnetFileOrchestrator.Domain.Interfaces;
 
-public interface IFileDestination
+public interface IFileDirectory
 {
     public string Name { get; set; }
     
-    public string Destination { get; set; }
+    public string Expression { get; set; }
     
     public string Type { get; }
 }

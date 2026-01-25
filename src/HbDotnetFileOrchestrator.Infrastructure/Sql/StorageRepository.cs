@@ -8,19 +8,21 @@ namespace HbDotnetFileOrchestrator.Infrastructure.Sql;
 public class StorageRepository
 (
     StorageDbContext context
-) : IIFileDestinationRepository
+) : IFileDirectoryRepository
 {
-    public async Task<IFileDestination[]> GetDestinationsByRuleAsync(Rule rule, CancellationToken cancellationToken = default)
+    public async Task<IFileDirectory[]> GetDestinationsByRuleAsync(Rule rule, CancellationToken cancellationToken = default)
     {
         return await context.Storages
+            .AsNoTracking()
             .Include(x => x.StorageRuleDbo)
             .Where(x => x.StorageRuleDbo.Name == rule.Name)
             .ToArrayAsync(cancellationToken);
     }
     
-    public async Task<IFileDestination> GetDestinationByRuleAsync(string rule, string destinationName, CancellationToken cancellationToken = default)
+    public async Task<IFileDirectory> GetDestinationByRuleAsync(string rule, string destinationName, CancellationToken cancellationToken = default)
     {
         return await context.Storages
+            .AsNoTracking()
             .Include(x => x.StorageRuleDbo)
             .SingleAsync(x =>
                 x.Name == destinationName && x.StorageRuleDbo.Name == rule, 

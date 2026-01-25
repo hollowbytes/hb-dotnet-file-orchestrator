@@ -4,8 +4,8 @@ using HbDotnetFileOrchestrator.Domain.Models;
 
 namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
-public interface IFileLocationResolver
+public interface IDirectoryResolver
 {
-    Task<Result<string>> ResolveAsync(Metadata metadata, IFileDestination options,
+    Task<Result<string>> ResolveAsync(Metadata metadata, IFileDirectory options,
         CancellationToken cancellationToken = default);
 }

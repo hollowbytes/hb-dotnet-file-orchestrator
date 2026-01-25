@@ -29,12 +29,12 @@ public class MetadataProvider(ILogger<MetadataProvider> logger, IHttpContextAcce
         return new Metadata(headers, routeValues, query, form, files);
     }
     
-    private static async Task<FileMetadata[]> GetFormFiles(HttpContext httpContext, CancellationToken cancellationToken = default)
+    private static async Task<FileInformation[]> GetFormFiles(HttpContext httpContext, CancellationToken cancellationToken = default)
     {
         if (!httpContext.Request.HasFormContentType) return [];
         
         var formCollection = await httpContext.Request.ReadFormAsync(cancellationToken);
-        return formCollection.Files.Select(kv => new FileMetadata(
+        return formCollection.Files.Select(kv => new FileInformation(
             kv.ContentType,
             kv.ContentDisposition,
             kv.Length,

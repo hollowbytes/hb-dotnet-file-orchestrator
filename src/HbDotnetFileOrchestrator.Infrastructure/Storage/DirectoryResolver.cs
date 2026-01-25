@@ -8,14 +8,14 @@ using HbDotnetFileOrchestrator.Domain.Models;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage;
 
-public class StorageLocationResolver : IFileLocationResolver
+public class DirectoryResolver : IDirectoryResolver
 {
     private static readonly FluidParser PARSER = new();
 
-    public async Task<Result<string>> ResolveAsync(Metadata metadata, IFileDestination options,
+    public async Task<Result<string>> ResolveAsync(Metadata metadata, IFileDirectory options,
         CancellationToken cancellationToken = default)
     {
-        if (!PARSER.TryParse(options.Destination, out var template, out var error))
+        if (!PARSER.TryParse(options.Expression, out var template, out var error))
             return Result.Failure<string>(error);
 
         var parserOptions = new TemplateOptions

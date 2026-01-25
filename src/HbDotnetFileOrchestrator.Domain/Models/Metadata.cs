@@ -8,5 +8,5 @@ public record Metadata(
     Dictionary<string, string?> RouteValues,
     Dictionary<string, string?[]> Query,
     Dictionary<string, string?[]> Form,
-    FileMetadata[] Files
+    FileInformation[] Files
 );

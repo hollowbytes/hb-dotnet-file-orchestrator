@@ -9,4 +9,4 @@ public interface IFileReaderStrategy
     Task<Result> ReadFileAsync(string location, CancellationToken cancellationToken = default);
 }
 
-public interface IFileReaderStrategy<in TOptions> : IFileReaderStrategy where TOptions : class, IFileDestination;
+public interface IFileReaderStrategy<in TOptions> : IFileReaderStrategy where TOptions : class, IFileDirectory;
