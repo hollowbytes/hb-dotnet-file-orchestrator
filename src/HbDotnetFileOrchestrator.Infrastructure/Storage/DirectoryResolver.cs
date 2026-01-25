@@ -1,5 +1,3 @@
-using System.Text.Json;
-using CSharpFunctionalExtensions;
 using Fluid;
 using Fluid.Values;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
@@ -16,7 +14,9 @@ public class DirectoryResolver : IDirectoryResolver
         CancellationToken cancellationToken = default)
     {
         if (!PARSER.TryParse(options.Expression, out var template, out var error))
-            return Result.Failure<string>(error);
+        {
+            return Result.Failure(string.Empty, error);
+        }
 
         var parserOptions = new TemplateOptions
         {
@@ -28,7 +28,7 @@ public class DirectoryResolver : IDirectoryResolver
         var context = new TemplateContext(parserOptions);
         context.SetValue("metadata", metadata);
         
-        var location = await template.RenderAsync(context);
-        return Result.Success(location);
+        var directory = await template.RenderAsync(context);
+        return directory;
     }
 }

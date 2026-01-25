@@ -11,7 +11,7 @@ public class RuleEvaluator
     ILogger<RuleEvaluator> logger
 ) : IRuleEvaluator
 {
-    public async Task<RuleResult[]> RunAsync(Rule[] rules, Metadata metadata, CancellationToken cancellationToken = default)
+    public async Task<Result<Rule>[]> RunAsync(Rule[] rules, Metadata metadata, CancellationToken cancellationToken = default)
     {
         var workflow = ToWorkflow(rules);
 
@@ -19,7 +19,11 @@ public class RuleEvaluator
         var result = await re.ExecuteAllRulesAsync(workflow.WorkflowName, new RuleParameter("metadata", metadata));
 
         return result
-            .Select(x => new RuleResult(x.Rule.RuleName, x.Rule.Expression, x.Rule.ErrorMessage))
+            .Select(x =>
+            {
+                var rule = new Rule(x.Rule.RuleName, x.Rule.Expression);
+                return x.IsSuccess ? rule : Result.Failure(rule, x.Rule.ErrorMessage);
+            })
             .ToArray();
     }
 

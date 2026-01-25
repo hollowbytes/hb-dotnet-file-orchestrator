@@ -1,7 +1,5 @@
 using System.IO.Abstractions;
-using CSharpFunctionalExtensions;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
-using HbDotnetFileOrchestrator.Domain.Models;
 using HbDotnetFileOrchestrator.Infrastructure.Sql.Models;
 using Microsoft.Extensions.Logging;
 
@@ -13,7 +11,7 @@ public class FileSystemFileReader
     IFileSystem fileSystem
 ) : IFileReaderStrategy<FileSystemStorageDbo>
 {
-    public async Task<Result> ReadFileAsync(string location, CancellationToken cancellationToken = default)
+    public async Task<string> ReadFileAsync(string location, CancellationToken cancellationToken = default)
     {
         // if (!fileSystem.Directory.Exists(location))
         // {
@@ -31,6 +29,6 @@ public class FileSystemFileReader
         //
         // await fileSystem.File.WriteAllBytesAsync(path, file.Contents, cancellationToken);
         // logger.LogInformation("File written to '{Path}'", path);
-        return Result.Success();
+        return string.Empty;
     }
 }

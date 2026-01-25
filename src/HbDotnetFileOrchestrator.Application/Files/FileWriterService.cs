@@ -1,6 +1,7 @@
 using System.Text.Json;
 using HbDotnetFileOrchestrator.Application.Files.Interfaces;
 using HbDotnetFileOrchestrator.Application.Files.Models;
+using HbDotnetFileOrchestrator.Application.Files.Models.Commands;
 using HbDotnetFileOrchestrator.Domain.Interfaces;
 using HbDotnetFileOrchestrator.Domain.Interfaces.Repositories;
 using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
@@ -28,13 +29,14 @@ public class FileWriterService(
         
         var results = new List<SavedFileResult>();
         
-        foreach (var rule in ruleResults)
+        foreach (var result in ruleResults)
         {
-            if (rule.IsFailure)
+            if (result.IsFailure)
             {
                 continue;
             }
             
+            var rule = result.Value;
             var destinations = await fileDirectoryRepository.GetDestinationsByRuleAsync(rule, cancellationToken);
             
             logger.LogInformation("Running '{Rule}' with '{Count}' destinations", rule.Name, destinations.Length);
@@ -69,21 +71,24 @@ public class FileWriterService(
     {
         var response = new SavedFileResult(rule.Name, directory.Name, directory.Type, receivedFile.Name);  
                 
-        var fileLocationResult = await directoryResolver.ResolveAsync(metadata, directory, cancellationToken);
+        var directoryResult = await directoryResolver
+            .ResolveAsync(metadata, directory, cancellationToken);
 
-        if (fileLocationResult.IsFailure)
+        if (directoryResult.IsFailure)
         {
-            return response with { Error = fileLocationResult.Error };
+            return response with { Error = directoryResult.Error };
         }
         
         var fileWriter = fileWriterFactory.Create(directory);
-        var saveResult = await fileWriter.SaveAsync(receivedFile, fileLocationResult.Value, cancellationToken);
+
+        var saveFileCommand = new FileWriterCommand(receivedFile, directoryResult.Value);
+        var saveResult = await fileWriter.SaveAsync(saveFileCommand, cancellationToken);
 
         if (saveResult.IsFailure)
         {
-            return response with { FileLocation = fileLocationResult.Value, Error = saveResult.Error };
+            return response with { FileLocation = directoryResult.Value, Error = saveResult.Error };
         }
 
-        return response with { FileLocation = fileLocationResult.Value };
+        return response with { FileLocation = directoryResult.Value };
     }
 }
