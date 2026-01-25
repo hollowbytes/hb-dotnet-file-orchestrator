@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
 
-public class FileSystemFileWriterStrategy
+public class FileSystemFileWriter
 (
-    ILogger<FileSystemFileWriterStrategy> logger,
+    ILogger<FileSystemFileWriter> logger,
     IFileSystem fileSystem
 ) : IFileWriterStrategy<FileSystemStorageDbo>
 {

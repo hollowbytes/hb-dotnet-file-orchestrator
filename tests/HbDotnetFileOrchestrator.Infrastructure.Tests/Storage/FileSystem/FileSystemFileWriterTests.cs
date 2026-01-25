@@ -8,7 +8,7 @@ using Shouldly;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Tests.Storage.FileSystem;
 
-public class FileSystemFileWriterStrategyTests
+public class FileSystemFileWriterTests
 {
     private readonly IFixture _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
 
@@ -24,7 +24,7 @@ public class FileSystemFileWriterStrategyTests
         _fixture.Register(() => mockDirectory.Object);
         
         // Act
-        var sut = _fixture.Create<FileSystemFileWriterStrategy>();
+        var sut = _fixture.Create<FileSystemFileWriter>();
         var actual = await sut.SaveAsync(fakeFile, fakeLocation, CancellationToken.None);
 
         // Actual
@@ -44,7 +44,7 @@ public class FileSystemFileWriterStrategyTests
         _fixture.Register(() => mockDirectory.Object);
         
         // Act
-        var sut = _fixture.Create<FileSystemFileWriterStrategy>();
+        var sut = _fixture.Create<FileSystemFileWriter>();
         var actual = await sut.SaveAsync(fakeFile, fakeLocation, CancellationToken.None);
 
         // Actual
@@ -67,7 +67,7 @@ public class FileSystemFileWriterStrategyTests
         _fixture.Register(() => mockFile.Object);
         
         // Act
-        var sut = _fixture.Create<FileSystemFileWriterStrategy>();
+        var sut = _fixture.Create<FileSystemFileWriter>();
         var actual = await sut.SaveAsync(fakeFile, fakeLocation, CancellationToken.None);
 
         // Actual
@@ -90,7 +90,7 @@ public class FileSystemFileWriterStrategyTests
         _fixture.Register(() => mockFile.Object);
         
         // Act
-        var sut = _fixture.Create<FileSystemFileWriterStrategy>();
+        var sut = _fixture.Create<FileSystemFileWriter>();
         var actual = await sut.SaveAsync(fakeFile, fakeLocation, CancellationToken.None);
 
         // Actual

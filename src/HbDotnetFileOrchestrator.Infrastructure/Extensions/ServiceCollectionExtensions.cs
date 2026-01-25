@@ -40,6 +40,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRuleRepository, StorageRuleRepository>();
         services.AddScoped<IIFileDestinationRepository, StorageRepository>();
 
-        services.AddScoped<IFileWriterStrategy<FileSystemStorageDbo>, FileSystemFileWriterStrategy>();
+        services.AddScoped<IFileWriterStrategy<FileSystemStorageDbo>, FileSystemFileWriter>();
     }
 }
