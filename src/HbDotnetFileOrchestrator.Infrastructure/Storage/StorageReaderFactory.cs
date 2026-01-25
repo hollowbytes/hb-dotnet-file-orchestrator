@@ -11,9 +11,9 @@ public class StorageReaderFactory(
     IServiceProvider serviceProvider
 ) : IFileReaderFactory
 {
-    public IFileReader Create(IFileDestination fileDestination)
+    public IFileReaderStrategy Create(IFileDestination fileDestination)
     {
-        var connector = typeof(IFileReader<>).MakeGenericType(fileDestination.GetType());
-        return (IFileReader)serviceProvider.GetRequiredService(connector);
+        var connector = typeof(IFileReaderStrategy<>).MakeGenericType(fileDestination.GetType());
+        return (IFileReaderStrategy)serviceProvider.GetRequiredService(connector);
     }
 }

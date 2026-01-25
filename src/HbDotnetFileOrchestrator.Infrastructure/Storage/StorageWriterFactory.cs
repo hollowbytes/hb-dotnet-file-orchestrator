@@ -11,9 +11,9 @@ public class StorageWriterFactory(
     IServiceProvider serviceProvider
 ) : IFileWriterFactory
 {
-    public IFileWriter Create(IFileDestination fileDestination)
+    public IFileWriterStrategy Create(IFileDestination fileDestination)
     {
-        var connector = typeof(IFileWriter<>).MakeGenericType(fileDestination.GetType());
-        return (IFileWriter)serviceProvider.GetRequiredService(connector);
+        var connector = typeof(IFileWriterStrategy<>).MakeGenericType(fileDestination.GetType());
+        return (IFileWriterStrategy)serviceProvider.GetRequiredService(connector);
     }
 }

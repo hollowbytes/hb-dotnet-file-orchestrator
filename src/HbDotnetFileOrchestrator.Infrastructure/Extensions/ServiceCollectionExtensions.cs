@@ -35,11 +35,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAuditRepository, StorageAuditRepository>();
 
         services.AddScoped<IFileReaderFactory, StorageReaderFactory>();
-        services.AddScoped<IFileReader<FileSystemStorageDbo>, FileSystemFileReader>();
+        services.AddScoped<IFileReaderStrategy<FileSystemStorageDbo>, FileSystemFileReader>();
         
         services.AddScoped<IRuleRepository, StorageRuleRepository>();
         services.AddScoped<IIFileDestinationRepository, StorageRepository>();
 
-        services.AddScoped<IFileWriter<FileSystemStorageDbo>, FileSystemFileWriter>();
+        services.AddScoped<IFileWriterStrategy<FileSystemStorageDbo>, FileSystemFileWriterStrategy>();
     }
 }

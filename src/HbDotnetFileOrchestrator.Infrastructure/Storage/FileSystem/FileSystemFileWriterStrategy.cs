@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Storage.FileSystem;
 
-public class FileSystemFileWriter
+public class FileSystemFileWriterStrategy
 (
-    ILogger<FileSystemFileWriter> logger,
+    ILogger<FileSystemFileWriterStrategy> logger,
     IFileSystem fileSystem
-) : IFileWriter<FileSystemStorageDbo>
+) : IFileWriterStrategy<FileSystemStorageDbo>
 {
     public async Task<Result> SaveAsync(ReceivedFile file, string location, CancellationToken cancellationToken = default)
     {

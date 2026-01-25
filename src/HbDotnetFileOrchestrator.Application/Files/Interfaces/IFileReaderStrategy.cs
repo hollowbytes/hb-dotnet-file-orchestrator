@@ -4,9 +4,9 @@ using HbDotnetFileOrchestrator.Domain.Models;
 
 namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
-public interface IFileReader
+public interface IFileReaderStrategy
 {
     Task<Result> ReadFileAsync(string location, CancellationToken cancellationToken = default);
 }
 
-public interface IFileReader<in TOptions> : IFileReader where TOptions : class, IFileDestination;
+public interface IFileReaderStrategy<in TOptions> : IFileReaderStrategy where TOptions : class, IFileDestination;

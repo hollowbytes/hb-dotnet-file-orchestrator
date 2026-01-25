@@ -11,7 +11,7 @@ public class FileSystemFileReader
 (
     ILogger<FileSystemFileReader> logger,
     IFileSystem fileSystem
-) : IFileReader<FileSystemStorageDbo>
+) : IFileReaderStrategy<FileSystemStorageDbo>
 {
     public async Task<Result> ReadFileAsync(string location, CancellationToken cancellationToken = default)
     {

@@ -4,5 +4,5 @@ namespace HbDotnetFileOrchestrator.Application.Files.Interfaces;
 
 public interface IFileWriterFactory
 {
-    IFileWriter Create(IFileDestination fileDestination);
+    IFileWriterStrategy Create(IFileDestination fileDestination);
 }
