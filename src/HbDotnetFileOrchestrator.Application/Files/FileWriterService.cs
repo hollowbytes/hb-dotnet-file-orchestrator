@@ -23,31 +23,25 @@ public class FileWriterService(
     public async Task<SavedFileResult[]> SaveFileAsync(ReceivedFile receivedFile, CancellationToken cancellationToken = default)
     {
         var metadata = await metadataProvider.GetMetadataAsync(cancellationToken);
-        
         var rules = await ruleRepository.GetAllAsync(cancellationToken);
         var evaluatedRules = await ruleEvaluator.RunAsync(rules, metadata, cancellationToken);
         
         var results = new List<SavedFileResult>();
-        var audit = new Audit()
-            .AddProperty("ConversationId", receivedFile.ConversationId.ToString())
-            .AddProperty("FileName", receivedFile.Name)
-            .AddProperty("FileSize", receivedFile.Size.ToString())
-            .AddProperty("Metadata", metadata);
-        
-        logger.LogInformation("Running {Count} rules...", rules.Length);
         
         foreach (var rule in evaluatedRules)
         {
-            var ruleAudit = audit.CreateScope()
-                .AddProperty("Rule", rule.Name);
-            
             var destinations = await fileDestinationRepository.GetDestinationsByRuleAsync(rule, cancellationToken);
-
-            logger.LogInformation("Storing in {destinations} locations...", destinations.Length);
-
+            
+            logger.LogInformation("Running '{Rule}' with '{Count}' destinations", rule.Name, destinations.Length);
+            
             foreach (var destination in destinations)
             {
-                var destinationAudit = await ruleAudit.CreateScope()
+                var audit = await new Audit()
+                    .AddProperty("ConversationId", receivedFile.ConversationId.ToString())
+                    .AddProperty("FileName", receivedFile.Name)
+                    .AddProperty("FileSize", receivedFile.Size.ToString())
+                    .AddProperty("Metadata", metadata)
+                    .AddProperty("Rule", rule.Name)
                     .AddProperty("DestinationName", destination.Name)
                     .AddProperty("DestinationType", destination.Type)
                     .AddProperty("Destination", destination.Destination)
@@ -60,10 +54,9 @@ public class FileWriterService(
                         results.Add(response);
                     });
                 
-                await auditRepository.AuditAsync(destinationAudit, cancellationToken);
+                await auditRepository.AuditAsync(audit, cancellationToken);
             }
         }
-
         return results.ToArray();
     }
 

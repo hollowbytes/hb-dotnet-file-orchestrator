@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using HbDotnetFileOrchestrator.Infrastructure.Http;
@@ -120,15 +119,14 @@ public class MetadataProviderTests
         }
     }
     
-    
     [Fact]
     public async Task GetMetadataAsync_GivenHttpContextAccessor_ThenMapRoutes()
     {
         // Arrange
-        var fakeDictionary = _fixture.Create<Dictionary<string, string?>>();
+        var mockRoutingFeature = _fixture.Freeze<Mock<IRoutingFeature>>();
         
         var fakeHttpContext = new DefaultHttpContext();
-        fakeHttpContext.Request.RouteValues = new RouteValueDictionary(fakeDictionary);
+        fakeHttpContext.Features.Set(mockRoutingFeature.Object);
         
         var mockHttpContextAccessor = _fixture.Freeze<Mock<IHttpContextAccessor>>();
         mockHttpContextAccessor.Setup(x => x.HttpContext).Returns(fakeHttpContext);
@@ -140,7 +138,7 @@ public class MetadataProviderTests
         // Asset
         foreach (var route in actual.RouteValues)
         {
-            route.Value.ShouldBe(fakeHttpContext.Request.RouteValues[route.Key]);
+            route.Value.ShouldBe(fakeHttpContext.GetRouteValue(route.Key));
         }
     }
 }

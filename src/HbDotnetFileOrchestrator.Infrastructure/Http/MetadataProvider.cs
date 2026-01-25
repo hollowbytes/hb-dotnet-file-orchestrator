@@ -1,6 +1,7 @@
 using HbDotnetFileOrchestrator.Domain.Interfaces.Services;
 using HbDotnetFileOrchestrator.Domain.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace HbDotnetFileOrchestrator.Infrastructure.Http;
@@ -18,7 +19,7 @@ public class MetadataProvider(ILogger<MetadataProvider> logger, IHttpContextAcce
             throw new InvalidOperationException();
         }
         
-        var routeValues = httpContext.Request.RouteValues.ToDictionary(kv => kv.Key, kv => kv.Value?.ToString());
+        var routeValues = httpContext.GetRouteData().Values.ToDictionary(kv => kv.Key, kv => kv.Value?.ToString());
         var headers = httpContext.Request.Headers.ToDictionary(x => x.Key, x => x.Value.ToArray());
         var query = httpContext.Request.Query.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray());
         
