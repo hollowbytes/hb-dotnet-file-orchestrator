@@ -36,7 +36,7 @@ jobs:
 
       # Upload the results to Github Code Scannning 
       - name: Upload Semgrep SARIF findings to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@4
         with:
           sarif_file: semgrep.sarif
           # Set the Code Scanning tool name to 'Semgrep'
