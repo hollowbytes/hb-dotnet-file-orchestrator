@@ -30,5 +30,14 @@ jobs:
     steps:
       # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
       - uses: actions/checkout@v4
+      
       # Run the "semgrep scan" command on the command line of the docker image.
-      - run: semgrep scan --config auto
+      - run: semgrep scan --config auto --output semgrep.sarif --sarif
+
+      # Upload the results to Github Code Scannning 
+      - name: Upload Semgrep SARIF findings to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+          # Set the Code Scanning tool name to 'Semgrep'
+          tool_name: Semgrep
