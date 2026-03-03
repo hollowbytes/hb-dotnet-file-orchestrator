@@ -5,7 +5,10 @@ on:
   push:
     branches:
       - main
-
+      
+permissions:
+  contents: read
+  
 jobs:
   build-and-publish:
     uses: hollowbytes/hb-shared-workflows/.github/workflows/ci-docker-build.yml@main
